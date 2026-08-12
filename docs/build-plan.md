@@ -21,8 +21,12 @@ session would otherwise have to rediscover.
       each) so the one-to-many is exercised from the start. 27 tests cover the
       schema validators and the registry invariants listed in
       `architecture.md`.
-- [ ] **3. Navigation pages** — `/`, `/[category]`, `/[category]/[test]` with
-      `generateStaticParams`. Static, no client state.
+- [x] **3. Navigation pages** — `/`, `/[category]`, `/[category]/[test]`, all
+      prerendered via `generateStaticParams`; unknown slugs `notFound()`. Added
+      `components/ui/` (badge, card, breadcrumbs), `components/layout/`
+      (page container + section), `lib/format.ts`, and a site header in the root
+      layout. The practice-exam and `review` links render but 404 until steps
+      6 and 8 create those routes.
 - [ ] **4. Pure logic + tests** — `grading.ts`, `missed-pool.ts`, `timer.ts` with
       Vitest coverage. **Do this before the UI** — it is the part that is
       expensive to debug through a browser.

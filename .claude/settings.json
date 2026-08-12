@@ -23,7 +23,16 @@
       "Bash(grep -n \"PracticeExam03\" src/content/registry.ts)",
       "Bash(echo \"--- pe03 file? ---\")",
       "Bash(cp /private/tmp/claude-501/-Users-parker-Projects-databricks-prep/68d9676c-45aa-49bc-a729-77532dd19c4f/scratchpad/registry.orig.ts src/content/registry.ts)",
-      "Bash(rm -f src/content/databricks/data-engineer-associate/practice-exams/practice-exam-03.json)"
+      "Bash(rm -f src/content/databricks/data-engineer-associate/practice-exams/practice-exam-03.json)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 2 http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 3 http://localhost:3000/)",
+      "Bash(ps -p 21857 -o pid,command)",
+      "Bash(ps -p 21857 -o command=)",
+      "Bash(kill 21857)",
+      "Bash(curl -s -o /dev/null -w \"port 3000: %{http_code}\\\\n\" --max-time 3 http://localhost:3000/)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"3010: %{http_code}\\\\n\" --max-time 2 http://localhost:3010/)"
     ]
   }
 }

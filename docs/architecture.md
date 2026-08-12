@@ -260,9 +260,20 @@ next-app/
 │   ├── lib/            grading.ts, missed-pool.ts, timer.ts, format.ts
 │   ├── stores/         sessions.ts, missed.ts, prefs.ts
 │   ├── hooks/          use-hydrated.ts, use-session-runner.ts
-│   └── components/     exam/, results/, ui/
+│   └── components/
+│       ├── layout/     page-container.tsx (frame, heading, sections)
+│       ├── ui/         badge, card, breadcrumbs, button, dialog, progress
+│       ├── exam/       runner pieces
+│       └── results/    score summary, domain breakdown, answer review
 └── tests/              mirrors src/ — tests/content/, tests/lib/, …
 ```
+
+### Next 16 route conventions
+
+Pages use the **generated** `PageProps<"/[category]/[test]">` and
+`LayoutProps<"/">` global helpers rather than hand-written prop types, and
+`params` is a **Promise** that must be awaited. `typedRoutes` is not enabled, so
+`Link href` accepts ordinary template strings.
 
 `src/` contains only shipping code. Tests live under `tests/` in a mirrored tree
 and import through the `@/` alias — `tests/content/schema.test.ts` covers

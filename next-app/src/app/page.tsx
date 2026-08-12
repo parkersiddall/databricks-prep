@@ -1,10 +1,30 @@
+import { PageContainer, Section } from "@/components/layout/page-container";
+import { CardLink } from "@/components/ui/card";
+import { getCategories, getTestsForCategory } from "@/content/queries";
+import { pluralize } from "@/lib/format";
+
 export default function HomePage() {
+  const categories = getCategories();
+
   return (
-    <main className="mx-auto w-full max-w-4xl px-6 py-16">
-      <h1 className="text-3xl font-semibold tracking-tight">Cert Prep</h1>
-      <p className="mt-2 text-muted">
-        Test category listing lands here in the next step.
-      </p>
-    </main>
+    <PageContainer
+      title="Practice exams"
+      description="Pick a track, choose a certification, then sit a practice exam. Progress saves in this browser as you go."
+    >
+      <Section>
+        {categories.map((category) => (
+          <CardLink
+            key={category.id}
+            href={`/${category.slug}`}
+            title={category.title}
+            description={category.description}
+            meta={pluralize(
+              getTestsForCategory(category.slug).length,
+              "certification",
+            )}
+          />
+        ))}
+      </Section>
+    </PageContainer>
   );
 }
