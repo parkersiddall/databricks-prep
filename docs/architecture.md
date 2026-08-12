@@ -70,6 +70,23 @@ the entire point of it.
 **Key decision:** one generic runner component driven by a source key, so a
 practice exam and a review session share a single code path.
 
+### Server shell, client runner
+
+Each interactive route is a **thin server component** that validates the route
+params, calls `notFound()` on a bad slug, and renders a client component with the
+source key and the hrefs it needs. The page itself stays static; all session state
+lives client-side.
+
+`useSessionRunner` returns a discriminated union — `loading` / `missing` /
+`ready` — because "still reading localStorage" needs a skeleton while "no session
+for this key" needs a prompt to start.
+
+**Trade-off:** because the runner resolves questions client-side through
+`content/queries`, the whole content registry is bundled into the client. Fine at
+this size, and it is what makes the runner work offline with no API. If the
+question bank grows large, the fix is to pass one practice exam's questions from
+the server shell as props rather than importing the registry in client code.
+
 ## Content layer
 
 ```

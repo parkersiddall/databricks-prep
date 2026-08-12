@@ -38,19 +38,36 @@ session would otherwise have to rediscover.
       - [x] **5a. `lib/session.ts`** *(new sub-step)* — the session operations were
             extracted as pure functions so the store stays a thin wrapper and the
             logic is testable without `localStorage`.
-- [ ] **5b. Hydration under real SSR is not yet exercised.** No component reads a
-      persisted store until step 6, so the `useHydrated` gate has no observable
-      effect yet. Watch the browser console for hydration warnings when the
-      runner lands.
-- [ ] **6. Runner** — `[practiceExam]/take`: question card, code block rendering,
-      nav grid, timer with auto-submit, flagging, study-mode instant feedback,
-      submit dialog warning on unanswered questions.
+- [x] **5b. Hydration verified under real SSR** — driven in headless Chrome
+      during step 6. No hydration warnings and no console errors across the start
+      screen, runner, reload, and submit.
+- [x] **6. Runner** — `[practiceExam]/take`: question card, code block, nav grid,
+      countdown with auto-submit, flagging, study-mode instant feedback, submit
+      dialog warning on blanks. Verified end to end in headless Chrome
+      (see "Driving the app" below).
+      - [x] **6a. Start / resume screen** *(new sub-step)* — `[practiceExam]/page.tsx`
+            plus `StartPanel`. The runner needs a session to exist, so this was a
+            prerequisite rather than optional: it offers mode and timer choice,
+            Resume vs Start over, and Retake after completion.
+      - [x] **6b. `useSessionRunner` returns a discriminated union** — `loading` /
+            `missing` / `ready`, because the runner must show a skeleton while
+            hydrating but a "start the exam" prompt when no session exists. It
+            previously returned `null` for both.
+      - [ ] **6c. Submitted state in the runner is temporary.** It shows the score
+            inline with a link to `…/results`, which **404s until step 7**.
 - [ ] **7. Results** — score summary, per-domain breakdown, full answer review
       with explanations; wire missed-pool updates on submit.
 - [ ] **8. Review flow** — `review` overview + `take` + `results`, reusing the
       runner via the `review:<testId>` source key.
 - [ ] **9. Polish** — resume badges per practice exam, reset progress, empty
       states, responsive nav grid (drawer on mobile).
+      - Explanations are rendered as plain text, so Markdown backticks in the
+        seed content show up literally (`` `availableNow=True` ``). Either strip
+        them from the content or render inline code. Visible in study mode and on
+        the results page.
+      - The prefs store only writes to `localStorage` once a preference is
+        changed, so `dbp:prefs:v1` is absent for a new user. Harmless — defaults
+        live in code — but do not treat its absence as a bug.
 
 ## Open questions
 
@@ -85,6 +102,30 @@ appear across a reload or a tab close.
 - Study mode: feedback appears per answer, and grading still reaches the pool.
 - `npm test`, `npm run lint`, and `npm run build` pass. Build confirms all routes
   prerender and no client-only API leaked into a server component.
+
+## Driving the app in a browser
+
+There is no browser automation in the repo and `chromium-cli` is not available on
+this machine. What worked for step 6 was installing `playwright-core` **outside
+the repo** (in a scratch directory, so no dependency is added) and driving the
+Chrome already installed on the machine via `channel: "chrome"`, which avoids
+Playwright's browser download entirely.
+
+```js
+const browser = await chromium.launch({ channel: "chrome", args: ["--no-sandbox"] });
+```
+
+Two selector traps cost time and will recur:
+
+- `getByRole("button", { name: "Next" })` also matches Next.js's **dev-tools
+  button**. Use `{ exact: true }`.
+- `innerText` reflects CSS `text-transform`, so the question heading reads
+  `QUESTION 3 OF 6`. Compare case-insensitively.
+- A bare text match for `Correct` hits the answer-key marker inside `OptionList`
+  before the feedback panel. Scope the locator to the panel.
+
+If this becomes routine, `/run-skill-generator` would capture it as a project
+skill.
 
 ## Docker verification
 

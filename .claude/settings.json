@@ -35,7 +35,14 @@
       "Bash(curl -s -o /dev/null -w \"3010: %{http_code}\\\\n\" --max-time 2 http://localhost:3010/)",
       "Bash(perl -0pi -e 's{\\(export const QuestionSchema = z\\\\n  \\\\.discriminatedUnion\\\\\\(\"type\", \\\\[SingleChoiceQuestionSchema\\)\\(\\\\]\\\\\\)\\)}{export const MultiChoiceQuestionSchema = z.object\\({\\\\n  ...questionBaseFields,\\\\n  type: z.literal\\(\"multi\"\\),\\\\n  options: z.array\\(QuestionOptionSchema\\).min\\(2\\),\\\\n  correctOptionIds: z.array\\(Id\\).min\\(1\\),\\\\n}\\);\\\\n\\\\n$1, MultiChoiceQuestionSchema$2}' src/content/schema.ts)",
       "Bash(npx tsc *)",
-      "Bash(echo \"build exit: $?\")"
+      "Bash(echo \"build exit: $?\")",
+      "Bash(echo \"typecheck: $?\")",
+      "Bash(echo \"lint: $?\")",
+      "Bash(mkdir -p shots)",
+      "Bash(BASE=http://localhost:3010 node drive.mjs)",
+      "Bash(echo \"DRIVER EXIT: $?\")",
+      "Bash(lsof -ti:3010 -sTCP:LISTEN)",
+      "Bash(xargs kill)"
     ]
   }
 }

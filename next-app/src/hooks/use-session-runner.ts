@@ -29,9 +29,14 @@ import { selectSession, useSessionsStore } from "@/stores/sessions";
  * Binds a source key to the sessions store, the missed pool, and a ticking
  * clock. This is the runner UI's entire API.
  *
- * Returns `null` until the store has hydrated, so callers render a skeleton
- * rather than briefly showing an empty exam.
+ * The result is a discriminated union rather than a nullable runner, because
+ * "still reading localStorage" and "no session exists for this key" need
+ * different UI: a skeleton in the first case, a prompt to start in the second.
  */
+export type UseSessionRunnerResult =
+  | { status: "loading" }
+  | { status: "missing" }
+  | { status: "ready"; runner: SessionRunner };
 
 export type SessionRunner = {
   session: Session;
@@ -56,7 +61,7 @@ export type SessionRunner = {
 
 const TICK_MS = 1_000;
 
-export function useSessionRunner(sourceKey: string): SessionRunner | null {
+export function useSessionRunner(sourceKey: string): UseSessionRunnerResult {
   const hydrated = useHydrated(useSessionsStore);
   const session = useSessionsStore(selectSession(sourceKey));
 
@@ -200,9 +205,10 @@ export function useSessionRunner(sourceKey: string): SessionRunner | null {
     [answerAction, applyGraded, currentSession, sourceKey],
   );
 
-  if (!hydrated || session === undefined) return null;
+  if (!hydrated) return { status: "loading" };
+  if (session === undefined) return { status: "missing" };
 
-  return {
+  const runner: SessionRunner = {
     session,
     questions,
     currentQuestion: questions[session.currentIndex],
@@ -221,4 +227,6 @@ export function useSessionRunner(sourceKey: string): SessionRunner | null {
     toggleFlag: (questionId) => toggleFlagAction(sourceKey, questionId),
     submit,
   };
+
+  return { status: "ready", runner };
 }

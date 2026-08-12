@@ -34,11 +34,19 @@ next-app/
 │   │   ├── page.tsx                 /                          test categories
 │   │   └── [category]/
 │   │       ├── page.tsx             /[category]                tests
-│   │       └── [test]/page.tsx      /[category]/[test]         practice exams
+│   │       └── [test]/
+│   │           ├── page.tsx         /[category]/[test]         practice exams
+│   │           └── [practiceExam]/
+│   │               ├── page.tsx     …/[practiceExam]           start / resume
+│   │               └── take/        …/[practiceExam]/take      the runner
 │   │
 │   ├── components/
 │   │   ├── layout/                  Page frame: PageContainer, Section
-│   │   └── ui/                      Primitives: Badge, Card/CardLink, Breadcrumbs
+│   │   ├── ui/                      Primitives: Badge, Button/ButtonLink,
+│   │   │                            Card/CardLink, Breadcrumbs, Dialog
+│   │   └── exam/                    Sitting an exam: StartPanel, ExamRunner,
+│   │                                QuestionCard, OptionList, CodeBlock,
+│   │                                QuestionNavGrid, RunnerHeader, SubmitDialog
 │   │
 │   ├── content/                     Authored content and its access layer
 │   │   ├── categories.json          Categories and the test ids they own

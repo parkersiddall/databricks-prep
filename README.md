@@ -172,8 +172,11 @@ category must list at least one test id.
   here would mark every attempt wrong, so it is validated.
 - **Slugs must be lowercase and hyphenated** (`practice-exam-3`, not
   `Practice Exam 3`), and must be unique among their siblings.
-- **`code` is optional** and renders as a syntax-highlighted block above the
-  options. **`explanation`** is optional and shows on the results page.
+- **`code` is optional** and renders as a monospace block above the options,
+  labelled with its language. It is not syntax-highlighted.
+- **`explanation`** is optional. It shows after submitting, and immediately in
+  study mode. Write it as plain prose — Markdown is **not** rendered, so
+  backticks appear literally.
 - **`timeLimitMinutes`** on a practice exam overrides the test's
   `defaultTimeLimitMinutes`. Omit it to inherit.
 - Only `"type": "single"` (one correct answer) is supported today. Other formats
