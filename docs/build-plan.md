@@ -16,8 +16,11 @@ session would otherwise have to rediscover.
       `output: "standalone"`.
 - [x] **1b. Repo restructure** *(added mid-flight)* — app moved into `next-app/`,
       Docker into `docker/`, `.gitignore` unanchored, VSCode excludes.
-- [ ] **2. Content layer** — `schema.ts`, `registry.ts`, `queries.ts`, seeded with
-      **two** practice exams so the one-to-many is exercised from the start.
+- [x] **2. Content layer** — `schema.ts`, `registry.ts`, `queries.ts` under
+      `next-app/src/content/`, seeded with **two** practice exams (6 questions
+      each) so the one-to-many is exercised from the start. 27 tests cover the
+      schema validators and the registry invariants listed in
+      `architecture.md`.
 - [ ] **3. Navigation pages** — `/`, `/[category]`, `/[category]/[test]` with
       `generateStaticParams`. Static, no client state.
 - [ ] **4. Pure logic + tests** — `grading.ts`, `missed-pool.ts`, `timer.ts` with
@@ -37,11 +40,13 @@ session would otherwise have to rediscover.
 
 ## Open questions
 
-- **Question JSON hand-off.** The user has an existing collection in JSON. Step 2
-  is blocked on either receiving it (so the schema is shaped around real data) or
-  a decision to define the schema first and seed it with written questions. If
-  the real JSON does not match the schema in `architecture.md`, write a one-off
-  `scripts/normalize-questions.ts` rather than loosening the schema.
+- **Question JSON hand-off — still outstanding.** The user has an existing
+  collection in JSON but has not handed it over yet. Step 2 went ahead with the
+  schema defined first and seeded with 12 written questions, so nothing is
+  blocked. When the real file arrives: if its shape differs, write a one-off
+  `scripts/normalize-questions.ts` to convert it rather than loosening the
+  schema, and delete or keep the seed questions as the user prefers. Their ids
+  use the `dea-pe1-001` convention, which the real content should follow.
 
 ## Verification checklist
 

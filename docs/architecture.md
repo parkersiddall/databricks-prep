@@ -84,9 +84,37 @@ next-app/src/content/
             └── practice-exam-02.json
 ```
 
+`categories.json` is an **array** of categories, each listing the `testIds` it
+owns. `practice-exam-*.json` may also carry `timeLimitMinutes`, which overrides
+the test's `defaultTimeLimitMinutes`.
+
+Three modules make up the layer:
+
+| Module        | Role                                                                       |
+| ------------- | -------------------------------------------------------------------------- |
+| `schema.ts`   | Zod schemas + the exported `Category` / `Test` / `PracticeExam` / `Question` types |
+| `registry.ts` | Static JSON imports, validation, and the lookup maps                        |
+| `queries.ts`  | The read-only accessors pages use; nothing else touches `registry` directly  |
+
 `registry.ts` **statically imports** each JSON file and validates it with Zod at
 module load — no `fs` globbing, so it works under static export and keeps types
-end-to-end. Adding a practice exam is a JSON file plus one import line.
+end-to-end. Adding a practice exam is a JSON file plus one import line; adding a
+test also needs an entry in `categories.json`.
+
+### Validated invariants
+
+Violating any of these throws at module load, which fails the build rather than
+surfacing as a wrong score mid-exam. All are covered by
+`tests/content/schema.test.ts` and `tests/content/queries.test.ts`.
+
+1. `correctOptionId` names one of the question's own options, and option ids
+   within a question are unique.
+2. Question ids are unique **globally**, not just within a practice exam.
+3. A question's `domain`, when present, is one of the owning test's declared
+   `domains` — otherwise a typo becomes a phantom row in the results breakdown.
+4. Every test is claimed by exactly one category, and every `testIds` entry in
+   `categories.json` resolves to a registered test.
+5. Category slugs are unique, and practice-exam slugs are unique within a test.
 
 ### Question schema
 
@@ -225,14 +253,20 @@ Pure functions over plain data. This is the layer that gets unit tests.
 Directories are created **as code lands in them**, not scaffolded upfront.
 
 ```
-next-app/src/
-├── app/            routes; pages stay thin
-├── content/        question JSON + schema.ts, registry.ts, queries.ts
-├── lib/            grading.ts, missed-pool.ts, timer.ts, format.ts (+ *.test.ts)
-├── stores/         sessions.ts, missed.ts, prefs.ts
-├── hooks/          use-hydrated.ts, use-session-runner.ts
-└── components/     exam/, results/, ui/
+next-app/
+├── src/
+│   ├── app/            routes; pages stay thin
+│   ├── content/        question JSON + schema.ts, registry.ts, queries.ts
+│   ├── lib/            grading.ts, missed-pool.ts, timer.ts, format.ts
+│   ├── stores/         sessions.ts, missed.ts, prefs.ts
+│   ├── hooks/          use-hydrated.ts, use-session-runner.ts
+│   └── components/     exam/, results/, ui/
+└── tests/              mirrors src/ — tests/content/, tests/lib/, …
 ```
+
+`src/` contains only shipping code. Tests live under `tests/` in a mirrored tree
+and import through the `@/` alias — `tests/content/schema.test.ts` covers
+`src/content/schema.ts`. Vitest's `include` is `tests/**/*.test.ts`.
 
 ## Known trade-offs
 

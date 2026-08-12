@@ -1,0 +1,110 @@
+{
+  "id": "dea-pe-01",
+  "slug": "practice-exam-1",
+  "title": "Practice Exam 1",
+  "description": "A broad first pass across all five exam objectives.",
+  "questions": [
+    {
+      "id": "dea-pe1-001",
+      "type": "single",
+      "domain": "Databricks Lakehouse Platform",
+      "prompt": "Which directory inside a Delta table's storage location contains the transaction log?",
+      "options": [
+        { "id": "a", "text": "_delta_log" },
+        { "id": "b", "text": "_transaction_log" },
+        { "id": "c", "text": "_checkpoint" },
+        { "id": "d", "text": "_metadata" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Delta Lake records every atomic commit as a JSON file under `_delta_log`, alongside periodic Parquet checkpoint files. That log is what provides ACID guarantees, time travel, and schema enforcement."
+    },
+    {
+      "id": "dea-pe1-002",
+      "type": "single",
+      "domain": "Databricks Lakehouse Platform",
+      "prompt": "A data engineer schedules a nightly notebook and wants the compute to shut down as soon as the run finishes, with no idle cost. Which compute should they configure?",
+      "options": [
+        { "id": "a", "text": "A job cluster defined on the scheduled job" },
+        { "id": "b", "text": "An all-purpose cluster shared with the analytics team" },
+        { "id": "c", "text": "An all-purpose cluster with a 10-minute auto-termination window" },
+        { "id": "d", "text": "An instance pool with a minimum idle instance count" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "A job cluster is provisioned for a single run and terminated the moment that run completes, so there is no idle period at all. All-purpose clusters stay alive for interactive work — even with auto-termination, they idle until the window elapses."
+    },
+    {
+      "id": "dea-pe1-003",
+      "type": "single",
+      "domain": "ELT with Spark SQL and Python",
+      "prompt": "The statement below runs against an existing Delta table named `sales_summary`. What is the outcome?",
+      "code": {
+        "language": "sql",
+        "source": "CREATE OR REPLACE TABLE sales_summary AS\nSELECT region, sum(amount) AS total\nFROM sales\nGROUP BY region;"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": "The table's contents are replaced with the query result, and earlier versions remain available through time travel"
+        },
+        { "id": "b", "text": "The statement fails because the table already exists" },
+        { "id": "c", "text": "The query result is appended to the existing rows" },
+        {
+          "id": "d",
+          "text": "The table is dropped and recreated, permanently discarding its history"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "`CREATE OR REPLACE TABLE` atomically overwrites both data and schema, but on a Delta table this is committed as a new version rather than a drop. Prior versions stay queryable via time travel until they are vacuumed."
+    },
+    {
+      "id": "dea-pe1-004",
+      "type": "single",
+      "domain": "ELT with Spark SQL and Python",
+      "prompt": "The nightly merge below runs against a Delta table. What happens to a row in `updates` whose `user_id` already exists in `users`?",
+      "code": {
+        "language": "sql",
+        "source": "MERGE INTO users u\nUSING updates s\n  ON u.user_id = s.user_id\nWHEN MATCHED THEN UPDATE SET *\nWHEN NOT MATCHED THEN INSERT *;"
+      },
+      "options": [
+        { "id": "a", "text": "Its column values overwrite the matching row in `users`" },
+        { "id": "b", "text": "It is inserted, leaving two rows with the same `user_id`" },
+        { "id": "c", "text": "It is skipped, because `WHEN MATCHED` only applies to deletes" },
+        { "id": "d", "text": "The statement fails on the duplicate key" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "`WHEN MATCHED THEN UPDATE SET *` updates every column of the target row from the source. `INSERT *` handles only the non-matching rows, so the operation is an upsert and no duplicates are created."
+    },
+    {
+      "id": "dea-pe1-005",
+      "type": "single",
+      "domain": "Incremental Data Processing",
+      "prompt": "Which value completes the Auto Loader stream below?",
+      "code": {
+        "language": "python",
+        "source": "(spark.readStream\n    .format(\"________\")\n    .option(\"cloudFiles.format\", \"json\")\n    .load(source_path))"
+      },
+      "options": [
+        { "id": "a", "text": "cloudFiles" },
+        { "id": "b", "text": "autoLoader" },
+        { "id": "c", "text": "delta" },
+        { "id": "d", "text": "json" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Auto Loader is invoked through the `cloudFiles` source. The format of the files being ingested is supplied separately via the `cloudFiles.format` option — here, JSON."
+    },
+    {
+      "id": "dea-pe1-006",
+      "type": "single",
+      "domain": "Data Governance",
+      "prompt": "In Unity Catalog, how is a table addressed by its fully qualified name?",
+      "options": [
+        { "id": "a", "text": "catalog.schema.table" },
+        { "id": "b", "text": "schema.table" },
+        { "id": "c", "text": "metastore.catalog.table" },
+        { "id": "d", "text": "workspace.schema.table" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Unity Catalog introduces a three-level namespace: catalog, then schema (formerly database), then the object. The older two-level `schema.table` form refers to the default catalog."
+    }
+  ]
+}

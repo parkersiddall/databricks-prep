@@ -1,0 +1,9 @@
+[
+  {
+    "id": "databricks",
+    "slug": "databricks",
+    "title": "Databricks",
+    "description": "Practice exams for Databricks Data Intelligence Platform certifications.",
+    "testIds": ["databricks-data-engineer-associate"]
+  }
+]

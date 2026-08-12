@@ -1,0 +1,15 @@
+{
+  "id": "databricks-data-engineer-associate",
+  "slug": "data-engineer-associate",
+  "title": "Databricks Certified Data Engineer Associate",
+  "description": "Covers the Databricks Lakehouse Platform, ELT with Spark SQL and Python, incremental data processing, production pipelines, and data governance.",
+  "defaultTimeLimitMinutes": 90,
+  "passingScorePct": 70,
+  "domains": [
+    "Databricks Lakehouse Platform",
+    "ELT with Spark SQL and Python",
+    "Incremental Data Processing",
+    "Production Pipelines",
+    "Data Governance"
+  ]
+}

@@ -16,7 +16,14 @@
       "Bash(npm test *)",
       "Bash(git status *)",
       "Bash(awk '{print $2}')",
-      "Bash(awk -F/ '{if \\(NF>2\\) print $1\"/\"$2\"/\"$3; else print $0}')"
+      "Bash(awk -F/ '{if \\(NF>2\\) print $1\"/\"$2\"/\"$3; else print $0}')",
+      "Bash(cd /Users/parker/Projects/databricks-prep/next-app)",
+      "Bash(ls -la tests/content/)",
+      "Bash(echo \"--- registry probe lines ---\")",
+      "Bash(grep -n \"PracticeExam03\" src/content/registry.ts)",
+      "Bash(echo \"--- pe03 file? ---\")",
+      "Bash(cp /private/tmp/claude-501/-Users-parker-Projects-databricks-prep/68d9676c-45aa-49bc-a729-77532dd19c4f/scratchpad/registry.orig.ts src/content/registry.ts)",
+      "Bash(rm -f src/content/databricks/data-engineer-associate/practice-exams/practice-exam-03.json)"
     ]
   }
 }

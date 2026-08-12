@@ -44,6 +44,23 @@ incrementally, was preferred.
 
 ---
 
+## Tests live in `next-app/tests/`, mirroring `src/`
+
+`src/content/schema.ts` is tested by `tests/content/schema.test.ts`. Tests import
+through the `@/` alias rather than relative paths, and Vitest's `include` is
+`tests/**/*.test.ts`. `src/` therefore contains only code that ships.
+
+**Rejected: colocating tests as `src/**/*.test.ts`.** It was the original
+convention and briefly in use, but mixing tests into the source tree was not
+wanted. **Also rejected: `__tests__/` directories**, which is still colocation
+with extra nesting.
+
+**Known trade-off:** a mirrored tree can drift — renaming or moving a source file
+does not move its test, and nothing enforces the correspondence. Keep the mirror
+accurate by hand when moving files.
+
+---
+
 ## Docker lives in `docker/`, building `next-app/` as context
 
 `docker/` holds one multi-stage `Dockerfile` with a `dev` target (hot reload) and
