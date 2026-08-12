@@ -42,7 +42,8 @@
       "Bash(BASE=http://localhost:3010 node drive.mjs)",
       "Bash(echo \"DRIVER EXIT: $?\")",
       "Bash(lsof -ti:3010 -sTCP:LISTEN)",
-      "Bash(xargs kill)"
+      "Bash(xargs kill)",
+      "Bash(echo \"build: $?\")"
     ]
   }
 }

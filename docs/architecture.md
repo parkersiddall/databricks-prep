@@ -312,6 +312,22 @@ Questions with no `domain` are excluded from `byDomain` but still counted in
 
 Pure functions over plain data. This is the layer that gets unit tests.
 
+### Results
+
+`components/results/ResultsView` reads the submitted session by source key and
+renders the score summary, the per-objective breakdown, and the full answer
+review. Like the runner, it is **generic over the source key**, so practice-exam
+results and review-sitting results share one implementation.
+
+The answer review reuses `OptionList` in its revealed, disabled state rather than
+duplicating option markup, so a reviewed question looks exactly like the one that
+was sat. Its "only incorrect" filter keeps each question's **original exam
+number** rather than renumbering the filtered view.
+
+Time taken comes from the stopped timer. Because `submitSession` pauses it, the
+`now` argument to `elapsedAt` cannot affect the total — which matters, since
+calling `Date.now()` during render trips ESLint's `react-hooks/purity` rule.
+
 ## Target source layout
 
 Directories are created **as code lands in them**, not scaffolded upfront.

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { QuestionCard } from "@/components/exam/question-card";
@@ -22,6 +23,7 @@ export function ExamRunner({
   startHref: string;
   resultsHref: string;
 }) {
+  const router = useRouter();
   const state = useSessionRunner(sourceKey);
   const [confirming, setConfirming] = useState(false);
 
@@ -159,6 +161,7 @@ export function ExamRunner({
         onConfirm={() => {
           setConfirming(false);
           runner.submit();
+          router.push(resultsHref);
         }}
       />
     </div>

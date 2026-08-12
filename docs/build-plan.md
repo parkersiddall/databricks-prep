@@ -53,10 +53,20 @@ session would otherwise have to rediscover.
             `missing` / `ready`, because the runner must show a skeleton while
             hydrating but a "start the exam" prompt when no session exists. It
             previously returned `null` for both.
-      - [ ] **6c. Submitted state in the runner is temporary.** It shows the score
-            inline with a link to `…/results`, which **404s until step 7**.
-- [ ] **7. Results** — score summary, per-domain breakdown, full answer review
-      with explanations; wire missed-pool updates on submit.
+      - [x] **6c. Submitted state in the runner** — submitting now navigates
+            straight to `…/results`. The inline panel remains as the "already
+            submitted" state for anyone who returns to `/take` directly.
+- [x] **7. Results** — `…/[practiceExam]/results` with `ScoreSummary` (score,
+      pass mark, time taken, blanks), `DomainBreakdown`, and `AnswerReviewList`
+      with an "only incorrect" filter. `ResultsView` is generic over the source
+      key, so step 8 reuses it for review sittings. Verified in headless Chrome:
+      4 of 6 → 67% → below a 70% pass mark, four domain rows, filter narrows to
+      2 while keeping original question numbering.
+      - Missed-pool updates were already wired in step 6 (`useSessionRunner`
+        applies them on submit in exam mode, per answer in study mode), so
+        nothing was needed here.
+      - `AnswerReviewList` reuses `OptionList` in its revealed, disabled state,
+        so a reviewed question looks exactly like the one that was sat.
 - [ ] **8. Review flow** — `review` overview + `take` + `results`, reusing the
       runner via the `review:<testId>` source key.
 - [ ] **9. Polish** — resume badges per practice exam, reset progress, empty

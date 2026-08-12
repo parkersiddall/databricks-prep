@@ -38,15 +38,18 @@ next-app/
 │   │           ├── page.tsx         /[category]/[test]         practice exams
 │   │           └── [practiceExam]/
 │   │               ├── page.tsx     …/[practiceExam]           start / resume
-│   │               └── take/        …/[practiceExam]/take      the runner
+│   │               ├── take/        …/[practiceExam]/take      the runner
+│   │               └── results/     …/[practiceExam]/results   score + review
 │   │
 │   ├── components/
 │   │   ├── layout/                  Page frame: PageContainer, Section
 │   │   ├── ui/                      Primitives: Badge, Button/ButtonLink,
 │   │   │                            Card/CardLink, Breadcrumbs, Dialog
-│   │   └── exam/                    Sitting an exam: StartPanel, ExamRunner,
-│   │                                QuestionCard, OptionList, CodeBlock,
-│   │                                QuestionNavGrid, RunnerHeader, SubmitDialog
+│   │   ├── exam/                    Sitting an exam: StartPanel, ExamRunner,
+│   │   │                            QuestionCard, OptionList, CodeBlock,
+│   │   │                            QuestionNavGrid, RunnerHeader, SubmitDialog
+│   │   └── results/                 ResultsView, ScoreSummary, DomainBreakdown,
+│   │                                AnswerReviewList
 │   │
 │   ├── content/                     Authored content and its access layer
 │   │   ├── categories.json          Categories and the test ids they own
