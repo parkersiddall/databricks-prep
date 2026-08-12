@@ -1,0 +1,22 @@
+{
+  // .gitignore keeps these out of version control, but VSCode still shows and
+  // indexes them. These three excludes are what actually clears the ~23k files
+  // out of the Explorer, search results, and the file watcher.
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/*.tsbuildinfo": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/package-lock.json": true
+  },
+  // Excluding these from the watcher is the big editor performance win —
+  // without it VSCode watches every file in node_modules for changes.
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.next/**": true,
+    "**/.git/objects/**": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --yes)",
+      "Bash(npm install *)",
+      "Bash(npm uninstall *)",
+      "Bash(npm pkg *)",
+      "Bash(npm run *)",
+      "Bash(git check-ignore *)",
+      "Bash(docker build *)",
+      "Bash(docker exec *)",
+      "Bash(docker stop *)",
+      "Bash(docker compose *)",
+      "Bash(curl -s http://localhost:4124/)",
+      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./package.json'\\).scripts,null,2\\)\\)\")",
+      "Bash(npm test *)",
+      "Bash(git status *)",
+      "Bash(awk '{print $2}')",
+      "Bash(awk -F/ '{if \\(NF>2\\) print $1\"/\"$2\"/\"$3; else print $0}')"
+    ]
+  }
+}

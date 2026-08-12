@@ -1,0 +1,20 @@
+# Production stack. Run from this directory:
+#   docker compose -f compose.prod.yaml up --build
+#
+# Builds the standalone output and runs it as a non-root user. No bind mounts —
+# the image is self-contained, which is what gets deployed.
+
+name: databricks-prep-prod
+
+services:
+  web:
+    build:
+      context: ../next-app
+      dockerfile: ../docker/Dockerfile
+      target: runner
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+    restart: unless-stopped

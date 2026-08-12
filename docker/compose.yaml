@@ -1,0 +1,30 @@
+# Development stack. Run from this directory:
+#   docker compose up --build
+#
+# Paths are relative to THIS file. The build context is ../next-app, so the
+# image only ever sees the app itself — not docker/ or the repo root.
+
+name: databricks-prep
+
+services:
+  web:
+    build:
+      context: ../next-app
+      dockerfile: ../docker/Dockerfile
+      target: dev
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      # Source is bind-mounted so edits on the host trigger hot reload.
+      - ../next-app:/app
+      # Anonymous volumes keep the container's own node_modules and .next,
+      # preventing the host directories from shadowing them. Without these,
+      # macOS-built binaries in node_modules would be mounted over the
+      # linux ones installed during the image build.
+      - /app/node_modules
+      - /app/.next
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+    stdin_open: true
+    tty: true

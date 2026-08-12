@@ -1,0 +1,2 @@
+# Keeps public/ tracked in git so the Dockerfile's `COPY /app/public` step
+# does not fail on a fresh clone. Safe to delete once real assets land here.

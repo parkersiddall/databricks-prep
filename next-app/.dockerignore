@@ -1,0 +1,27 @@
+# Never copy host-built artifacts into the image — node_modules in particular
+# holds darwin-compiled binaries that break inside a linux container.
+node_modules
+.next
+out
+build
+coverage
+
+.git
+.gitignore
+
+.env*
+!.env.example
+
+.dockerignore
+
+.claude
+.vscode
+.idea
+*.log
+npm-debug.log*
+.DS_Store
+
+README.md
+LICENSE
+AGENTS.md
+CLAUDE.md
