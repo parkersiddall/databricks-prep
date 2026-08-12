@@ -191,11 +191,13 @@ Three details make "finish it later" actually work:
 1. **Question order is frozen at session start** (`questionIds` snapshot).
    Critical for review sessions — the pool mutates as answers are graded, and a
    live-derived list would reshuffle the exam mid-attempt.
-2. **The timer accumulates on pause**, rather than storing a fixed deadline. On
-   mount set `lastResumedAt = Date.now()`; on each tick and on
-   `visibilitychange` / `beforeunload`, flush `elapsedMs += now - lastResumedAt`.
-   Closing the tab pauses the clock, which is what resuming implies. Auto-submit
-   at zero.
+2. **The timer accumulates on pause**, rather than storing a fixed deadline.
+   `lib/timer.ts` exposes `resume` / `flush` / `pause` over a `TimerState` of
+   `{ timeLimitMs, elapsedMs, lastResumedAt }`: `resume` on mount (idempotent, so
+   repeated mounts cannot lose banked time), `flush` on each tick, `pause` on
+   `visibilitychange` / `beforeunload`. Closing the tab pauses the clock, which
+   is what resuming implies; `isExpired` drives auto-submit. Elapsed time is
+   clamped at zero so a backwards system clock cannot refund spent time.
 3. **Every mutation persists immediately.** No save button; a hard refresh
    mid-question loses nothing.
 
@@ -240,11 +242,28 @@ grader plus one new option renderer — no changes to the runner, stores, or
 results.
 
 ```ts
-const graders: { [T in Question["type"]]: (q: Extract<Question, { type: T }>, a?: AnswerValue) => boolean };
+type Graders = {
+  [T in QuestionType]: (q: Extract<Question, { type: T }>, a: AnswerValue | undefined) => boolean;
+};
 
-scoreAttempt(questions, answers): AttemptResult
-// -> { correctCount, total, scorePct, passed, perQuestion[], byDomain[] }
+scoreAttempt(questions, answers, { passingScorePct }): AttemptResult
+// -> { correctCount, answeredCount, total, scorePct, passed, perQuestion[], byDomain[] }
 ```
+
+The mapped type is the enforcement mechanism: adding a member to the `Question`
+union fails the build until a grader exists for it.
+
+Two grading decisions that matter:
+
+- **An unanswered question is graded incorrect**, as in the real exam.
+  `answeredCount` is reported separately so the UI can warn about blanks before
+  submitting.
+- **`scorePct` is exact and unrounded.** Rounding inside grading could turn a
+  69.6% into a pass; `passed` compares the exact value, and `formatPercent`
+  rounds only for display.
+
+Questions with no `domain` are excluded from `byDomain` but still counted in
+`total`. Breakdown rows follow first-appearance order, so they read in exam order.
 
 Pure functions over plain data. This is the layer that gets unit tests.
 

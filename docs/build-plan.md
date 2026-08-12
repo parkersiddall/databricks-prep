@@ -27,9 +27,11 @@ session would otherwise have to rediscover.
       (page container + section), `lib/format.ts`, and a site header in the root
       layout. The practice-exam and `review` links render but 404 until steps
       6 and 8 create those routes.
-- [ ] **4. Pure logic + tests** — `grading.ts`, `missed-pool.ts`, `timer.ts` with
-      Vitest coverage. **Do this before the UI** — it is the part that is
-      expensive to debug through a browser.
+- [x] **4. Pure logic + tests** — `lib/grading.ts`, `lib/missed-pool.ts`,
+      `lib/timer.ts`, plus `formatDuration` / `formatPercent` in `lib/format.ts`.
+      80 tests total. Verified separately that adding a question type to the
+      `Question` union is a **compile error** until a grader is added
+      (`TS2741: Property 'multi' is missing … required in type 'Graders'`).
 - [ ] **5. Stores + hydration** — three Zustand stores, `use-hydrated`,
       `use-session-runner`.
 - [ ] **6. Runner** — `[practiceExam]/take`: question card, code block rendering,

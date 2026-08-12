@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { formatMinutes, joinMeta, pluralize } from "@/lib/format";
+import {
+  formatDuration,
+  formatMinutes,
+  formatPercent,
+  joinMeta,
+  pluralize,
+} from "@/lib/format";
 
 describe("pluralize", () => {
   it("uses the singular for exactly one", () => {
@@ -28,6 +34,34 @@ describe("formatMinutes", () => {
 
   it("renders hours and minutes together", () => {
     expect(formatMinutes(90)).toBe("1 hr 30 min");
+  });
+});
+
+describe("formatDuration", () => {
+  it("renders mm:ss with a zero-padded seconds field", () => {
+    expect(formatDuration(65_000)).toBe("1:05");
+    expect(formatDuration(9_000)).toBe("0:09");
+  });
+
+  it("widens to h:mm:ss past an hour", () => {
+    expect(formatDuration(3_600_000)).toBe("1:00:00");
+    expect(formatDuration(5_445_000)).toBe("1:30:45");
+  });
+
+  it("floors partial seconds rather than rounding up", () => {
+    expect(formatDuration(1_999)).toBe("0:01");
+  });
+
+  // An expired timer must never render as negative.
+  it("clamps negative input to zero", () => {
+    expect(formatDuration(-5_000)).toBe("0:00");
+  });
+});
+
+describe("formatPercent", () => {
+  it("rounds to a whole percent", () => {
+    expect(formatPercent(66.6667)).toBe("67%");
+    expect(formatPercent(75)).toBe("75%");
   });
 });
 
