@@ -7,8 +7,12 @@ Practice test app to prepare for the Databricks certification exam
 ```
 databricks-prep/
 ├── docker/       Dockerfile and compose files
+├── docs/         architecture and build plan
 └── next-app/     the Next.js application (standard create-next-app packaging)
 ```
+
+Design lives in [`docs/architecture.md`](docs/architecture.md); current status and
+remaining work in [`docs/build-plan.md`](docs/build-plan.md).
 
 ## Running locally
 
