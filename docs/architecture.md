@@ -173,13 +173,27 @@ type Session = {
   currentIndex: number;
   mode: "exam" | "study";         // study = instant feedback
   startedAt: number;
-  timeLimitMs: number | null;
-  elapsedMs: number;              // accumulated across visits
-  lastResumedAt: number | null;
+  timer: TimerState;              // { timeLimitMs, elapsedMs, lastResumedAt }
   status: "in-progress" | "submitted";
   result?: AttemptResult;
+  submittedAt?: number;
 };
 ```
+
+The timer fields are **nested as a `TimerState`** rather than flattened onto the
+session, so `lib/timer.ts` functions compose directly instead of every caller
+rebuilding the struct.
+
+Operations on a session live in `lib/session.ts` as pure functions
+(`createSession`, `setAnswer`, `toggleFlag`, `goToIndex`, `submitSession`, and
+`resumeTimer` / `flushTimer` / `pauseTimer` passthroughs). Each returns a new
+session, or **the same object when nothing changed**, which lets the store skip
+needless re-renders. `stores/sessions.ts` is a thin wrapper that holds the map
+and persists it.
+
+One rule worth knowing: **study mode locks a question once answered.** It reveals
+the correct answer and feeds the missed pool at that instant, so allowing a change
+afterwards would let the user grade the same question twice.
 
 Keying by source key gives **each practice exam its own independent session** —
 Practice Exam 1 can sit half-finished while Practice Exam 2 is untouched. The
@@ -231,9 +245,23 @@ size (10 / 25 / all).
 ### Hydration
 
 `localStorage` is client-only, so persisted state must not drive the first
-render. A `use-hydrated` hook wrapping `store.persist.hasHydrated()` gates the
-runner and results pages behind a skeleton. **This is the single most likely
-source of hydration-mismatch bugs in this app.**
+render. `hooks/use-hydrated.ts` gates the runner and results pages behind a
+skeleton. **This is the single most likely source of hydration-mismatch bugs in
+this app.**
+
+It is built on **`useSyncExternalStore`, not `useState` + `useEffect`**, because
+that primitive takes a separate server snapshot — pinned to `false`, and also used
+for the client's hydrating render. This matters: Zustand's localStorage
+persistence rehydrates *synchronously* while the store module is evaluated, so
+`hasHydrated()` already returns true by the client's first render. Reading it
+directly would reintroduce the very mismatch the hook exists to prevent. (Seeding
+`useState` from it and correcting in an effect also trips
+`react-hooks/set-state-in-effect`.)
+
+`hooks/use-session-runner.ts` is the runner's entire API: it binds a source key to
+the sessions store, the missed pool, and a one-second tick. It returns `null`
+until hydrated, resumes the clock on mount, flushes on each tick, banks time on
+`visibilitychange` / `beforeunload`, and auto-submits on expiry.
 
 ## Grading
 

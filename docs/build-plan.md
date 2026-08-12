@@ -32,8 +32,16 @@ session would otherwise have to rediscover.
       80 tests total. Verified separately that adding a question type to the
       `Question` union is a **compile error** until a grader is added
       (`TS2741: Property 'multi' is missing … required in type 'Graders'`).
-- [ ] **5. Stores + hydration** — three Zustand stores, `use-hydrated`,
-      `use-session-runner`.
+- [x] **5. Stores + hydration** — three persisted Zustand stores
+      (`sessions`, `missed`, `prefs`), `use-hydrated`, `use-session-runner`.
+      108 tests, including reload-survival against a memory storage shim.
+      - [x] **5a. `lib/session.ts`** *(new sub-step)* — the session operations were
+            extracted as pure functions so the store stays a thin wrapper and the
+            logic is testable without `localStorage`.
+- [ ] **5b. Hydration under real SSR is not yet exercised.** No component reads a
+      persisted store until step 6, so the `useHydrated` gate has no observable
+      effect yet. Watch the browser console for hydration warnings when the
+      runner lands.
 - [ ] **6. Runner** — `[practiceExam]/take`: question card, code block rendering,
       nav grid, timer with auto-submit, flagging, study-mode instant feedback,
       submit dialog warning on unanswered questions.

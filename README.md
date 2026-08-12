@@ -7,12 +7,16 @@ Practice test app to prepare for the Databricks certification exam
 ```
 databricks-prep/
 ├── docker/       Dockerfile and compose files
-├── docs/         architecture and build plan
+├── docs/         architecture, decisions, build plan
 └── next-app/     the Next.js application (standard create-next-app packaging)
 ```
 
-Design lives in [`docs/architecture.md`](docs/architecture.md); current status and
-remaining work in [`docs/build-plan.md`](docs/build-plan.md).
+- [`next-app/README.md`](next-app/README.md) — what lives in each source
+  directory, and what belongs where.
+- [`docs/architecture.md`](docs/architecture.md) — the design.
+- [`docs/decisions.md`](docs/decisions.md) — why the repo is laid out this way,
+  and which alternatives were rejected.
+- [`docs/build-plan.md`](docs/build-plan.md) — current status and remaining work.
 
 ## Running locally
 
