@@ -143,3 +143,10 @@ Each of these has already cost time once. They are not hypothetical.
    build.** Error messages are prefixed `[content]` and name the offending id.
    Do not loosen `src/content/schema.ts` to make real data fit — normalize the
    data instead. The invariants are listed in `docs/architecture.md`.
+9. **`<html>` carries `suppressHydrationWarning`, and it is load-bearing.** The
+   inline theme script sets `data-theme` before React hydrates, so the server
+   HTML deliberately differs. Removing the prop reintroduces a hydration error on
+   every page; removing the script reintroduces a flash of the wrong theme.
+10. **Anything rendering persisted state must be gated on `useHydrated`.** The
+    status badges, start panel, runner, and results all do this. Rendering
+    `localStorage` data unguarded is the fastest way to a hydration mismatch.

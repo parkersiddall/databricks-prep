@@ -43,7 +43,10 @@
       "Bash(echo \"DRIVER EXIT: $?\")",
       "Bash(lsof -ti:3010 -sTCP:LISTEN)",
       "Bash(xargs kill)",
-      "Bash(echo \"build: $?\")"
+      "Bash(echo \"build: $?\")",
+      "Bash(BASE=http://localhost:3010 node polish.mjs)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(BASE=http://localhost:3010 node options.mjs)"
     ]
   }
 }

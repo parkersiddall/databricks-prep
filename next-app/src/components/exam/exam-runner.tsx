@@ -99,6 +99,36 @@ export function ExamRunner({
         studyMode={isStudyMode}
       />
 
+      {/*
+        Below `lg` the grid collapses into a disclosure above the question, so it
+        stays reachable without pushing the exam itself down the page. `hidden`
+        removes the other copy from the accessibility tree, so only one set of
+        question buttons is ever exposed.
+      */}
+      <details className="mb-4 rounded-lg border border-border bg-surface-raised p-4 lg:hidden">
+        <summary className="cursor-pointer text-sm font-medium">
+          All questions ({answeredCount}/{questions.length} answered)
+        </summary>
+        <div className="mt-3">
+          <QuestionNavGrid
+            questionIds={session.questionIds}
+            currentIndex={currentIndex}
+            isAnswered={runner.isAnswered}
+            isFlagged={runner.isFlagged}
+            onSelect={runner.goTo}
+          />
+          {/* The sidebar's submit button is hidden at this width. */}
+          <Button
+            variant="secondary"
+            size="sm"
+            className="mt-4 w-full"
+            onClick={() => setConfirming(true)}
+          >
+            Submit exam
+          </Button>
+        </div>
+      </details>
+
       <div className="grid gap-6 lg:grid-cols-[1fr_12rem]">
         <div className="min-w-0">
           {currentQuestion === undefined ? (
@@ -134,7 +164,7 @@ export function ExamRunner({
           </div>
         </div>
 
-        <aside className="lg:sticky lg:top-6 lg:self-start">
+        <aside className="hidden lg:sticky lg:top-6 lg:block lg:self-start">
           <QuestionNavGrid
             questionIds={session.questionIds}
             currentIndex={currentIndex}

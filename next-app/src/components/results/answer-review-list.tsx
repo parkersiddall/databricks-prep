@@ -5,6 +5,7 @@ import { useState } from "react";
 import { CodeBlock } from "@/components/exam/code-block";
 import { OptionList } from "@/components/exam/option-list";
 import { Badge } from "@/components/ui/badge";
+import { RichText } from "@/components/ui/rich-text";
 import type { Question } from "@/content/schema";
 import type { QuestionOutcome } from "@/lib/grading";
 
@@ -75,7 +76,9 @@ export function AnswerReviewList({
                 {question.domain !== undefined && <Badge>{question.domain}</Badge>}
               </div>
 
-              <p className="mt-3 text-balance">{question.prompt}</p>
+              <p className="mt-3 text-balance">
+                <RichText text={question.prompt} />
+              </p>
 
               {question.code !== undefined && <CodeBlock code={question.code} />}
 
@@ -89,7 +92,7 @@ export function AnswerReviewList({
 
               {question.explanation !== undefined && (
                 <p className="mt-4 rounded-md border border-border bg-surface p-3 text-sm text-muted">
-                  {question.explanation}
+                  <RichText text={question.explanation} />
                 </p>
               )}
             </li>

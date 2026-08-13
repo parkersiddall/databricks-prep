@@ -1,5 +1,6 @@
 "use client";
 
+import { RichText } from "@/components/ui/rich-text";
 import type { Question } from "@/content/schema";
 import type { AnswerValue } from "@/lib/grading";
 
@@ -59,7 +60,9 @@ export function OptionList({
                 onChange={() => onAnswer({ type: "single", optionId: option.id })}
                 className="mt-0.5 accent-primary"
               />
-              <span className="min-w-0 flex-1">{option.text}</span>
+              <span className="min-w-0 flex-1">
+                <RichText text={option.text} />
+              </span>
               {revealCorrect && isCorrect && (
                 <span className="shrink-0 text-xs font-medium text-success">
                   Correct

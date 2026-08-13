@@ -32,6 +32,7 @@ next-app/
 │   │   ├── layout.tsx               Root layout, fonts, site header
 │   │   ├── globals.css              Tailwind import + semantic color tokens
 │   │   ├── page.tsx                 /                          test categories
+│   │   ├── settings/page.tsx        /settings                  prefs + reset
 │   │   └── [category]/
 │   │       ├── page.tsx             /[category]                tests
 │   │       └── [test]/
@@ -47,7 +48,9 @@ next-app/
 │   ├── components/
 │   │   ├── layout/                  Page frame: PageContainer, Section
 │   │   ├── ui/                      Primitives: Badge, Button/ButtonLink,
-│   │   │                            Card/CardLink, Breadcrumbs, Dialog
+│   │   │                            Card/CardLink, Breadcrumbs, Dialog,
+│   │   │                            RichText (inline-code prose)
+│   │   ├── settings/                SettingsPanel, ThemeSync + themeScript
 │   │   ├── exam/                    Sitting an exam: StartPanel, ReviewPanel,
 │   │   │                            ExamRunner, QuestionCard, OptionList,
 │   │   │                            CodeBlock, QuestionNavGrid, RunnerHeader,
@@ -126,3 +129,8 @@ These are the app-specific ones; the full list is in
   the data rather than loosening `content/schema.ts`.
 - **Anything reading a persisted store must be gated on `useHydrated`,** or the
   server's HTML will not match the client's.
+- **`<html>` carries `suppressHydrationWarning` on purpose.** The inline theme
+  script sets `data-theme` before React hydrates. Removing the prop reintroduces a
+  hydration error everywhere; removing the script reintroduces a theme flash.
+- **Prose supports inline backticks only.** Prompts, options, and explanations go
+  through `<RichText>`; there is no Markdown parser.

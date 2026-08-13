@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import {
+  MissedCount,
+  PracticeExamStatus,
+} from "@/components/exam/practice-exam-status";
 import { PageContainer, Section } from "@/components/layout/page-container";
 import { Badge } from "@/components/ui/badge";
 import { CardLink } from "@/components/ui/card";
@@ -57,22 +61,29 @@ export default async function TestPage({
       </Section>
 
       <Section heading="Practice exams">
-        {practiceExams.map((practiceExam) => {
-          const timeLimit = getTimeLimitMinutes(practiceExam.id);
+        {practiceExams.length === 0 ? (
+          <p className="rounded-lg border border-border bg-surface-raised p-5 text-sm text-muted">
+            No practice exams have been added for this certification yet.
+          </p>
+        ) : (
+          practiceExams.map((practiceExam) => {
+            const timeLimit = getTimeLimitMinutes(practiceExam.id);
 
-          return (
-            <CardLink
-              key={practiceExam.id}
-              href={`${basePath}/${practiceExam.slug}`}
-              title={practiceExam.title}
-              description={practiceExam.description}
-              meta={joinMeta(
-                pluralize(practiceExam.questions.length, "question"),
-                timeLimit !== null && formatMinutes(timeLimit),
-              )}
-            />
-          );
-        })}
+            return (
+              <CardLink
+                key={practiceExam.id}
+                href={`${basePath}/${practiceExam.slug}`}
+                title={practiceExam.title}
+                description={practiceExam.description}
+                aside={<PracticeExamStatus practiceExamId={practiceExam.id} />}
+                meta={joinMeta(
+                  pluralize(practiceExam.questions.length, "question"),
+                  timeLimit !== null && formatMinutes(timeLimit),
+                )}
+              />
+            );
+          })
+        )}
       </Section>
 
       <Section heading="Review">
@@ -80,6 +91,7 @@ export default async function TestPage({
           href={`${basePath}/review`}
           title="Missed questions"
           description="Drill only the questions you have got wrong recently, across every practice exam in this certification."
+          aside={<MissedCount testId={test.id} />}
         />
       </Section>
     </PageContainer>

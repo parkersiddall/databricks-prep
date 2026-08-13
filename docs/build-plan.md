@@ -81,12 +81,24 @@ session would otherwise have to rediscover.
         those 5 graduated out and the re-missed one **reset to streak 0**. The
         overview badge tracked 6 → 1, and clearing the list preserved
         `pe:dea-pe-01`.
-- [ ] **9. Polish** — resume badges per practice exam, reset progress, empty
-      states, responsive nav grid (drawer on mobile).
-      - Explanations are rendered as plain text, so Markdown backticks in the
-        seed content show up literally (`` `availableNow=True` ``). Either strip
-        them from the content or render inline code. Visible in study mode and on
-        the results page.
+- [x] **9. Polish**
+      - [x] **Inline code.** `parseInlineCode` + `<RichText>` render Markdown
+            backticks in prompts, options, and explanations as `<code>`. This is
+            the *only* Markdown supported — no parser is shipped.
+      - [x] **Status badges** on the test page: `x/y` answered for an in-progress
+            exam, the score for a completed one, and the missed-question count on
+            the review card. Client components gated on `useHydrated`.
+      - [x] **Settings page** (`/settings`) with theme, exam defaults, and
+            "Reset all progress" across all three stores.
+      - [x] **Theme applied before first paint** by an inline script, so there is
+            no flash; `ThemeSync` keeps it in step afterwards.
+      - [x] **Responsive nav grid.** Below `lg` the sidebar is `hidden` and the
+            grid moves into a `<details>` disclosure above the question, carrying
+            its own submit button. Using `hidden` (not just visual offscreening)
+            keeps one copy out of the accessibility tree. No horizontal overflow
+            at 390px.
+      - [x] **Empty states** for a test with no practice exams, and for results
+            requested before an attempt exists.
       - The prefs store only writes to `localStorage` once a preference is
         changed, so `dbp:prefs:v1` is absent for a new user. Harmless — defaults
         live in code — but do not treat its absence as a bug.
@@ -106,13 +118,18 @@ session would otherwise have to rediscover.
 Run before calling the feature complete. Most of these catch bugs that only
 appear across a reload or a tab close.
 
+All of the below have been exercised in headless Chrome except the two marked
+**[unverified]**, which need real elapsed wall-clock time.
+
 - Walk home → Databricks → DEA → Practice Exam 1, answer a few, then
   **hard-refresh mid-exam**: answers, flags, current index, and remaining time
   all survive.
 - Start Practice Exam 1, leave partway, start Practice Exam 2: sessions are
   independent, and both show correct per-row status on the test page.
-- Close the tab for a minute and reopen: the timer **paused**, it did not
-  advance.
+- **[unverified]** Close the tab for a minute and reopen: the timer **paused**,
+  it did not advance. The pause/resume maths is unit tested and the
+  `visibilitychange` handler is wired, but no browser run has yet left a tab
+  hidden for a measurable stretch.
 - Submit with deliberate wrong answers: score and per-question marks are right,
   and missed questions appear in `dbp:missed:v1` (DevTools → Application →
   Local Storage).
@@ -120,7 +137,9 @@ appear across a reload or a tab close.
   test-level review session contains **both**.
 - Answer a pooled question correctly **twice** → it leaves the pool. Answer
   another incorrectly → `correctStreak` resets to 0.
-- Set a short time limit and let it expire → auto-submit lands on results.
+- **[unverified]** Set a short time limit and let it expire → auto-submit fires.
+  `isExpired` is unit tested and the effect is wired, but the shortest limit the
+  UI offers is 90 minutes, so no end-to-end run has watched one lapse.
 - Study mode: feedback appears per answer, and grading still reaches the pool.
 - `npm test`, `npm run lint`, and `npm run build` pass. Build confirms all routes
   prerender and no client-only API leaked into a server component.

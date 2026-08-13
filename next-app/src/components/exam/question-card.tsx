@@ -4,6 +4,7 @@ import { CodeBlock } from "@/components/exam/code-block";
 import { OptionList } from "@/components/exam/option-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { RichText } from "@/components/ui/rich-text";
 import type { Question } from "@/content/schema";
 import { isAnswerCorrect, type AnswerValue } from "@/lib/grading";
 
@@ -53,7 +54,9 @@ export function QuestionCard({
         </Button>
       </header>
 
-      <p className="mt-3 text-balance">{question.prompt}</p>
+      <p className="mt-3 text-balance">
+        <RichText text={question.prompt} />
+      </p>
 
       {question.code !== undefined && <CodeBlock code={question.code} />}
 
@@ -81,7 +84,9 @@ export function QuestionCard({
                 : "Incorrect"}
           </p>
           {question.explanation !== undefined && (
-            <p className="mt-1 text-muted">{question.explanation}</p>
+            <p className="mt-1 text-muted">
+              <RichText text={question.explanation} />
+            </p>
           )}
         </div>
       )}

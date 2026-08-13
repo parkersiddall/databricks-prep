@@ -285,6 +285,27 @@ the sessions store, the missed pool, and a one-second tick. It returns `null`
 until hydrated, resumes the clock on mount, flushes on each tick, banks time on
 `visibilitychange` / `beforeunload`, and auto-submits on expiry.
 
+### Theme
+
+Theme is the one place a hydration mismatch is *intended*. An inline script in
+the document head reads `dbp:prefs:v1` and sets `data-theme` on `<html>` before
+first paint, which is what avoids a flash of the wrong theme — but it means the
+client's `<html>` no longer matches the server's. `<html>` therefore carries
+`suppressHydrationWarning`, whose scope is that element's own attributes and does
+not extend into the tree. `ThemeSync` keeps the attribute in step when the
+preference changes afterwards.
+
+Removing either piece breaks something: without the script there is a flash;
+without the prop there is a hydration error on every page.
+
+### Prose rendering
+
+Prompts, options, and explanations are authored with Markdown-style backticks
+around identifiers. `parseInlineCode` splits those spans out and `<RichText>`
+renders them as `<code>`. **This is the entire extent of Markdown support** —
+deliberately, rather than shipping a parser for a few identifiers. An unmatched
+backtick stays literal instead of swallowing the rest of the string.
+
 ## Grading
 
 A `graders` record keyed on question `type`, so a future multi-select is one new

@@ -5,6 +5,7 @@ import {
   formatMinutes,
   formatPercent,
   joinMeta,
+  parseInlineCode,
   pluralize,
 } from "@/lib/format";
 
@@ -62,6 +63,41 @@ describe("formatPercent", () => {
   it("rounds to a whole percent", () => {
     expect(formatPercent(66.6667)).toBe("67%");
     expect(formatPercent(75)).toBe("75%");
+  });
+});
+
+describe("parseInlineCode", () => {
+  it("returns a single text segment when there is no code", () => {
+    expect(parseInlineCode("plain prose")).toEqual([
+      { type: "text", value: "plain prose" },
+    ]);
+  });
+
+  it("splits a backticked span out of the surrounding text", () => {
+    expect(parseInlineCode("look in `_delta_log` for it")).toEqual([
+      { type: "text", value: "look in " },
+      { type: "code", value: "_delta_log" },
+      { type: "text", value: " for it" },
+    ]);
+  });
+
+  it("handles several spans, including at the very start and end", () => {
+    expect(parseInlineCode("`a` then `b`")).toEqual([
+      { type: "code", value: "a" },
+      { type: "text", value: " then " },
+      { type: "code", value: "b" },
+    ]);
+  });
+
+  // Must not swallow the rest of the string when a backtick is unbalanced.
+  it("leaves an unmatched backtick as literal text", () => {
+    expect(parseInlineCode("a ` dangling backtick")).toEqual([
+      { type: "text", value: "a ` dangling backtick" },
+    ]);
+  });
+
+  it("handles an empty string", () => {
+    expect(parseInlineCode("")).toEqual([]);
   });
 });
 
