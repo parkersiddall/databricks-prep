@@ -1,0 +1,112 @@
+{
+  "id": "dea-pe-02",
+  "slug": "practice-exam-2",
+  "title": "Practice Exam 2",
+  "description": "Weighted toward streaming, pipelines, and table maintenance.",
+  "questions": [
+    {
+      "id": "dea-pe2-001",
+      "type": "single",
+      "domain": "Incremental Data Processing",
+      "prompt": "A Structured Streaming job is configured with the trigger below. What is its behavior?",
+      "code": {
+        "language": "python",
+        "source": "(spark.readStream.table(\"bronze\")\n    .writeStream\n    .option(\"checkpointLocation\", checkpoint_path)\n    .trigger(availableNow=True)\n    .table(\"silver\"))"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": "It processes all currently available data, in as many micro-batches as needed, then stops"
+        },
+        { "id": "b", "text": "It runs continuously, processing new data as it arrives" },
+        { "id": "c", "text": "It processes exactly one micro-batch and then stops" },
+        { "id": "d", "text": "It fails unless a processing-time interval is also supplied" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "`availableNow=True` drains everything available at start-up across multiple batches, then terminates — which keeps memory bounded on large backlogs. The older `once=True` processed a single batch; omitting the trigger entirely gives a continuously running micro-batch stream."
+    },
+    {
+      "id": "dea-pe2-002",
+      "type": "single",
+      "domain": "Production Pipelines",
+      "prompt": "In the Delta Live Tables definition below, what happens to an incoming record whose `amount` is null?",
+      "code": {
+        "language": "sql",
+        "source": "CREATE OR REFRESH STREAMING TABLE orders_clean(\n  CONSTRAINT valid_amount\n    EXPECT (amount IS NOT NULL)\n    ON VIOLATION DROP ROW\n)\nAS SELECT * FROM STREAM(LIVE.orders_raw);"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": "The record is discarded and counted as a violation in the pipeline event log"
+        },
+        { "id": "b", "text": "The pipeline update fails immediately" },
+        { "id": "c", "text": "The record is written through with a null amount and flagged" },
+        { "id": "d", "text": "The record is routed automatically to a quarantine table" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "`ON VIOLATION DROP ROW` drops failing records while still reporting them in the event log metrics. `FAIL UPDATE` is the variant that halts the pipeline; with no `ON VIOLATION` clause the record is retained and only reported."
+    },
+    {
+      "id": "dea-pe2-003",
+      "type": "single",
+      "domain": "Databricks Lakehouse Platform",
+      "prompt": "A Delta table written by a frequent streaming job has accumulated thousands of small files, and queries have slowed. Which command addresses this directly?",
+      "options": [
+        { "id": "a", "text": "OPTIMIZE" },
+        { "id": "b", "text": "VACUUM" },
+        { "id": "c", "text": "ANALYZE TABLE" },
+        { "id": "d", "text": "REFRESH TABLE" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "`OPTIMIZE` compacts many small files into fewer larger ones. `VACUUM` is unrelated — it deletes files no longer referenced by the transaction log to reclaim storage, and does not improve file layout."
+    },
+    {
+      "id": "dea-pe2-004",
+      "type": "single",
+      "domain": "ELT with Spark SQL and Python",
+      "prompt": "What distinguishes a shallow clone from a deep clone of a Delta table?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A shallow clone copies only metadata and continues to reference the source table's data files"
+        },
+        { "id": "b", "text": "A shallow clone copies the data but not the transaction history" },
+        { "id": "c", "text": "A shallow clone can only be created within the source table's schema" },
+        { "id": "d", "text": "A shallow clone is read-only and cannot be written to" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "A shallow clone copies just the metadata, so it is near-instant but breaks if the source's files are vacuumed away. A deep clone copies the data files as well, producing a fully independent table. Both are writable."
+    },
+    {
+      "id": "dea-pe2-005",
+      "type": "single",
+      "domain": "ELT with Spark SQL and Python",
+      "prompt": "Which statement about a view created with `CREATE TEMP VIEW` is accurate?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It is scoped to the current SparkSession and disappears when that session ends"
+        },
+        { "id": "b", "text": "It is registered in the metastore and visible to all users" },
+        { "id": "c", "text": "It materializes its query results to the table's storage location" },
+        { "id": "d", "text": "It is visible to every notebook attached to the same cluster" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "A temporary view is session-scoped and holds no data — the query re-runs on each reference. A *global* temporary view lives in the `global_temp` schema and is shared across sessions on the same cluster, which is the distinction option D describes."
+    },
+    {
+      "id": "dea-pe2-006",
+      "type": "single",
+      "domain": "Data Governance",
+      "prompt": "Which statement gives the group `analysts` read access to a Unity Catalog table?",
+      "options": [
+        { "id": "a", "text": "GRANT SELECT ON TABLE sales.orders TO `analysts`" },
+        { "id": "b", "text": "GRANT READ ON TABLE sales.orders TO `analysts`" },
+        { "id": "c", "text": "ALLOW SELECT ON sales.orders FOR `analysts`" },
+        { "id": "d", "text": "GRANT USAGE ON TABLE sales.orders TO `analysts`" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Reading a table requires the `SELECT` privilege. The group also needs `USE CATALOG` and `USE SCHEMA` on the containing objects — those traversal privileges are what `USAGE` covers in option D, and they are not sufficient on their own."
+    }
+  ]
+}

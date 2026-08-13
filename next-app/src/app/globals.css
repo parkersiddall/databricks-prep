@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/*
+ * Semantic color tokens. Components reference these (bg-surface, text-muted,
+ * border-border) rather than raw palette values, so the whole app re-themes
+ * from this one block.
+ *
+ * Three theme states are supported:
+ *   - light            -> bare :root
+ *   - system dark      -> prefers-color-scheme, skipped when explicitly light
+ *   - explicit dark    -> [data-theme="dark"] on <html>, set by the prefs store
+ */
+
+:root {
+  --background: #ffffff;
+  --surface: #f6f7f9;
+  --surface-raised: #ffffff;
+  --border: #e2e6ea;
+  --foreground: #16191d;
+  --muted: #5f6873;
+
+  --primary: #d93a1c;
+  --primary-hover: #bd3117;
+  --primary-foreground: #ffffff;
+
+  --success: #147a4b;
+  --success-surface: #e8f6ef;
+  --danger: #c0271f;
+  --danger-surface: #fdeceb;
+  --warning: #a86800;
+  --warning-surface: #fdf3e2;
+
+  --ring: #d93a1c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #0d1013;
+    --surface: #14181d;
+    --surface-raised: #1a1f26;
+    --border: #272e37;
+    --foreground: #e7eaee;
+    --muted: #99a3af;
+
+    --primary: #ff5c3d;
+    --primary-hover: #ff7358;
+    --primary-foreground: #1a0d09;
+
+    --success: #3ecf8e;
+    --success-surface: #10261e;
+    --danger: #ff6b6b;
+    --danger-surface: #2a1416;
+    --warning: #e0a33a;
+    --warning-surface: #2a2012;
+
+    --ring: #ff5c3d;
+  }
+}
+
+:root[data-theme="dark"] {
+  --background: #0d1013;
+  --surface: #14181d;
+  --surface-raised: #1a1f26;
+  --border: #272e37;
+  --foreground: #e7eaee;
+  --muted: #99a3af;
+
+  --primary: #ff5c3d;
+  --primary-hover: #ff7358;
+  --primary-foreground: #1a0d09;
+
+  --success: #3ecf8e;
+  --success-surface: #10261e;
+  --danger: #ff6b6b;
+  --danger-surface: #2a1416;
+  --warning: #e0a33a;
+  --warning-surface: #2a2012;
+
+  --ring: #ff5c3d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-success: var(--success);
+  --color-success-surface: var(--success-surface);
+  --color-danger: var(--danger);
+  --color-danger-surface: var(--danger-surface);
+  --color-warning: var(--warning);
+  --color-warning-surface: var(--warning-surface);
+
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* The runner locks the viewport; this keeps long content scrolling inside panes. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
