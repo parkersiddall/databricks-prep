@@ -46,7 +46,16 @@
       "Bash(echo \"build: $?\")",
       "Bash(BASE=http://localhost:3010 node polish.mjs)",
       "Bash(echo \"EXIT: $?\")",
-      "Bash(BASE=http://localhost:3010 node options.mjs)"
+      "Bash(BASE=http://localhost:3010 node options.mjs)",
+      "Bash(env)",
+      "Read(//Users/parker/.config/gh/**)",
+      "Bash(gh auth *)",
+      "Bash(awk -F/ '{if \\(NF>1\\) print $1\"/\"$2; else print $1}')",
+      "Bash(git push *)",
+      "Bash(git fetch *)",
+      "Bash(git rev-list *)",
+      "Bash(awk '{print \"behind: \"$1\", ahead: \"$2}')",
+      "Bash(gh pr *)"
     ]
   }
 }

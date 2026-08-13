@@ -117,6 +117,26 @@ routine work.** If a future chunk of work is large enough to need one, a
 throwaway checklist is fine, but delete it when it is done rather than leaving a
 stale plan behind.
 
+The **"Build plan" section of a pull request is a different thing** and is
+expected: it narrates how that one change was built, and lives in the PR
+description, not in the repo.
+
+---
+
+## Pull requests follow a fixed template
+
+[`.github/pull_request_template.md`](../.github/pull_request_template.md) sets
+three sections: **Introduction** (what was built), **Build plan** (how, in order),
+and **Notes** (decisions worth reviewing, verification, known issues and gaps).
+
+The guidance lives in HTML comments, which GitHub renders invisibly, so the
+prompts stay available to the author without appearing in the published PR.
+
+**Consequence to remember:** `gh` never applies the template automatically. There
+is no `--template` flag, and `--body` / `--body-file` bypasses it — GitHub only
+prefills it in the web UI, and `gh` only in an interactive prompt. Anything
+scripted or agent-driven must read the template and fill it in by hand.
+
 ---
 
 ## Project knowledge lives in this repo

@@ -30,6 +30,7 @@ left, update the file on the right **in the same turn and the same commit**:
 | Repo layout, tooling, or rejected an approach                 | `docs/decisions.md`       |
 | A source directory, or how to verify a change                 | `next-app/README.md`      |
 | How to add content, or how to run the app                     | `README.md`               |
+| What a pull request should contain                            | `.github/pull_request_template.md` |
 | Commands, conventions, vocabulary, or hit a new gotcha        | `CLAUDE.md`               |
 
 Specific triggers, all of which have already come up once:
@@ -48,6 +49,34 @@ Specific triggers, all of which have already come up once:
 Do not duplicate a fact across files — state it in the file that owns it and link
 from the others. Two copies of the same fact drift, and then neither is
 trustworthy.
+
+## Opening a pull request
+
+Use [`.github/pull_request_template.md`](.github/pull_request_template.md):
+**Introduction** (what was built), **Build plan** (how it was built, in order),
+then **Notes** (decisions, verification, known issues).
+
+**`gh` will not apply the template for you.** There is no `--template` flag, and
+passing `--body` or `--body-file` bypasses the template entirely — it is only
+prefilled when `gh pr create` prompts interactively, which an agent never does.
+So read the template, fill it in, and pass the result:
+
+```bash
+gh pr create --base main --head <branch> \
+  --title "<title>" \
+  --body-file <filled-in-body.md>
+```
+
+Write that body file outside the repo (the scratchpad), not into the working
+tree.
+
+Two things to get right:
+
+- The **Build plan** section is a narrative of how *this* change was built. It is
+  not a standing document — do not recreate `docs/build-plan.md`, which was
+  deliberately deleted. See `docs/decisions.md`.
+- Fill in **Known issues and gaps** honestly, including what was *not* verified.
+  A PR that quietly omits an untested path is worse than one that names it.
 
 ## Repository layout
 
