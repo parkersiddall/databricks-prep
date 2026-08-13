@@ -1,7 +1,8 @@
 # Architecture
 
-The design this app is being built to. Read alongside
-[`build-plan.md`](build-plan.md), which tracks execution status.
+The design this app is built to. Read alongside [`decisions.md`](decisions.md),
+which records why the repo is laid out this way and which alternatives were
+rejected.
 
 ## What this is
 

@@ -99,24 +99,31 @@ itself was never tracking them.
 
 ---
 
-## Work proceeds one build-plan step at a time
+## Work proceeds one unit at a time
 
-Each step in [`build-plan.md`](build-plan.md) is finished, reported, and
-committed before the next begins. Claude should stop after each step rather than
-chaining several together, and should not commit on the user's behalf unless
-asked.
+Each piece of work is finished, reported, and committed before the next begins.
+Claude should stop after each rather than chaining several together, and should
+not commit on the user's behalf unless asked.
 
 **Why:** a large multi-step change is hard to review and collapses into one
 oversized commit.
+
+The initial build was tracked in a `docs/build-plan.md` checklist, which was
+deleted once every step landed. Its still-live content — the verification
+checklist and the browser-driving recipe — moved into
+[`../next-app/README.md`](../next-app/README.md); the Docker smoke test moved
+into the root [`../README.md`](../README.md). **Do not recreate a build plan for
+routine work.** If a future chunk of work is large enough to need one, a
+throwaway checklist is fine, but delete it when it is done rather than leaving a
+stale plan behind.
 
 ---
 
 ## Project knowledge lives in this repo
 
-Architecture, conventions, decisions, and status are documented here rather than
-carried in any single session's context, so the knowledge is shared and
-reviewable. Prefer correcting these files over answering from memory; keep
-`build-plan.md` ticked as steps land.
+Architecture, conventions, and decisions are documented here rather than carried
+in any single session's context, so the knowledge is shared and reviewable.
+Prefer correcting these files over answering from memory.
 
 Documentation is kept current by **instruction, not automation**. `CLAUDE.md` has
 a "Keeping documentation current" section with a trigger table mapping change

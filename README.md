@@ -7,16 +7,15 @@ Practice test app to prepare for the Databricks certification exam
 ```
 databricks-prep/
 ├── docker/       Dockerfile and compose files
-├── docs/         architecture, decisions, build plan
+├── docs/         architecture and decisions
 └── next-app/     the Next.js application (standard create-next-app packaging)
 ```
 
 - [`next-app/README.md`](next-app/README.md) — what lives in each source
-  directory, and what belongs where.
+  directory, what belongs where, and how to verify a change.
 - [`docs/architecture.md`](docs/architecture.md) — the design.
 - [`docs/decisions.md`](docs/decisions.md) — why the repo is laid out this way,
   and which alternatives were rejected.
-- [`docs/build-plan.md`](docs/build-plan.md) — current status and remaining work.
 
 ## Running locally
 
@@ -206,6 +205,10 @@ production image. The build context is `next-app/`, so `.dockerignore` lives
 there alongside the app.
 
 Override the host port with `PORT=4000 docker compose up`.
+
+After any change to `docker/` or `next.config.ts`, re-run both: the production
+stack should return HTTP 200 as a non-root user and report healthy, and the dev
+stack should hot-reload through the bind mount (measured at ~1s on macOS).
 
 > Next.js recommends plain `npm run dev` over Docker for day-to-day development on
 > macOS and Windows, since containerized filesystem access can slow hot reload. The

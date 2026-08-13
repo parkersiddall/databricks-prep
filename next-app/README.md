@@ -114,6 +114,60 @@ Two rules that keep this honest:
 - **Imports use the `@/` alias**, not `../../`. `@/lib/grading`, not
   `../../lib/grading`.
 
+## Verifying a change
+
+`npm test`, `npm run lint`, and `npm run build` cover most of it — the build also
+confirms every route still prerenders and that no client-only API leaked into a
+server component.
+
+The behaviours below only break across a reload or a tab close, so they need a
+browser. All have been exercised in headless Chrome except the two marked
+**[unverified]**, which need real elapsed wall-clock time.
+
+- Answer a few questions, then **hard-refresh mid-exam**: answers, flags, current
+  question, and remaining time all survive.
+- Start Practice Exam 1, leave partway, start Practice Exam 2: the two sessions
+  are independent and both show the right badge on the test page.
+- **[unverified]** Close the tab for a minute and reopen: the timer **paused**
+  rather than advancing. The maths is unit tested and the `visibilitychange`
+  handler is wired, but no run has left a tab hidden for a measurable stretch.
+- Submit with deliberate wrong answers: score and per-question marks are right,
+  and the missed questions land in `dbp:missed:v1`.
+- Miss one question in each practice exam: the test-level review contains
+  **both**.
+- Answer a pooled question correctly **twice** → it leaves the pool. Answer
+  another incorrectly → its `correctStreak` resets to 0.
+- **[unverified]** Let a time limit expire → auto-submit fires. `isExpired` is
+  unit tested and the effect is wired, but the shortest limit the UI offers is
+  90 minutes, so nothing has watched one lapse.
+- Study mode: feedback appears per answer and grading still reaches the pool.
+- No hydration warnings in the console on any page.
+
+### Driving it in a browser
+
+There is no browser automation in this repo and `chromium-cli` is not available.
+What works is installing `playwright-core` **outside the repo** — a scratch
+directory, so no dependency is added — and driving the Chrome already on the
+machine, which skips Playwright's browser download:
+
+```js
+const browser = await chromium.launch({ channel: "chrome", args: ["--no-sandbox"] });
+```
+
+Three selector traps cost time and will recur:
+
+- `getByRole("button", { name: "Next" })` also matches Next.js's **dev-tools
+  button**. Use `{ exact: true }`.
+- `innerText` reflects CSS `text-transform`, so the question heading reads
+  `QUESTION 3 OF 6`, while Playwright's own text matchers see the raw DOM text.
+  Use `textContent()` when parsing it. This one bit twice.
+- A bare text match for `Correct` hits the answer-key marker inside `OptionList`
+  before the feedback panel. Scope the locator to the panel, or to
+  `span.rounded-full` for a Badge.
+
+If this becomes routine, `/run-skill-generator` would capture it as a project
+skill.
+
 ## Things that will bite you
 
 These are the app-specific ones; the full list is in

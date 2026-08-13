@@ -8,10 +8,14 @@ no authentication — all user progress lives in browser `localStorage`.
 **Read [`docs/architecture.md`](docs/architecture.md) before writing feature code.**
 It defines the domain vocabulary, routing, data model, and persistence design.
 
-- [`docs/build-plan.md`](docs/build-plan.md) — which steps are done, what's next.
 - [`docs/decisions.md`](docs/decisions.md) — why the repo is laid out this way, and
   which alternatives were already rejected. Check it before proposing a
   restructure.
+- [`next-app/README.md`](next-app/README.md) — the source directory map, plus how
+  to verify a change in a browser.
+
+The initial build is complete: browsing, sitting, grading, reviewing missed
+questions, settings, and theming all work.
 
 ## Keeping documentation current
 
@@ -20,17 +24,16 @@ shared source of truth across sessions; stale ones are worse than missing ones,
 because they get trusted. Before ending any turn that changed the things on the
 left, update the file on the right **in the same turn and the same commit**:
 
-| If you changed…                                              | Update                |
-| ------------------------------------------------------------ | --------------------- |
-| Completed, split, or added a build step                       | `docs/build-plan.md`  |
-| Routing, data model, persistence, grading, or a trade-off     | `docs/architecture.md`|
-| Repo layout, tooling, or rejected an approach                 | `docs/decisions.md`   |
-| Commands, conventions, vocabulary, or hit a new gotcha        | `CLAUDE.md`           |
+| If you changed…                                              | Update                    |
+| ------------------------------------------------------------ | ------------------------- |
+| Routing, data model, persistence, grading, or a trade-off     | `docs/architecture.md`    |
+| Repo layout, tooling, or rejected an approach                 | `docs/decisions.md`       |
+| A source directory, or how to verify a change                 | `next-app/README.md`      |
+| How to add content, or how to run the app                     | `README.md`               |
+| Commands, conventions, vocabulary, or hit a new gotcha        | `CLAUDE.md`               |
 
 Specific triggers, all of which have already come up once:
 
-- **A build step lands** → tick its checkbox in `docs/build-plan.md`. If the work
-  revealed new sub-steps, add them rather than silently absorbing them.
 - **A design detail changes during implementation** → fix
   `docs/architecture.md` immediately. When a doc and the code disagree, the code
   is right and the doc is a bug.
@@ -39,8 +42,8 @@ Specific triggers, all of which have already come up once:
   what stops it being re-proposed in a later session.
 - **Something costs real debugging time** → add it to the gotchas list at the
   bottom of this file, phrased so the next session avoids it outright.
-- **An open question is answered** (e.g. the question-JSON hand-off) → resolve it
-  in `docs/build-plan.md` instead of leaving it listed as open.
+- **A new directory appears under `src/`** → add it to the tree and the "what
+  belongs where" table in `next-app/README.md`.
 
 Do not duplicate a fact across files — state it in the file that owns it and link
 from the others. Two copies of the same fact drift, and then neither is
@@ -51,7 +54,7 @@ trustworthy.
 ```
 databricks-prep/
 ├── docker/       Dockerfile + compose files (build context is ../next-app)
-├── docs/         architecture and build plan
+├── docs/         architecture and decisions
 └── next-app/     the Next.js app — stock create-next-app packaging
 ```
 
@@ -110,8 +113,9 @@ ambiguous between the middle and leaf level.
   `next-app/src/app/globals.css` (`bg-surface`, `text-muted`, `border-border`,
   `text-danger`, …) rather than raw palette values, so the theme stays swappable.
   Light, system-dark, and explicit `[data-theme="dark"]` are all wired.
-- **Commit cadence:** the user reviews and commits one build-plan step at a time.
-  Stop after each step rather than chaining several together.
+- **Commit cadence:** the user reviews and commits one unit of work at a time.
+  Finish a piece, report what changed and what was verified, then stop rather than
+  chaining several together.
 
 ## Gotchas discovered the hard way
 
