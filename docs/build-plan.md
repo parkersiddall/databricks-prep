@@ -67,8 +67,20 @@ session would otherwise have to rediscover.
         nothing was needed here.
       - `AnswerReviewList` reuses `OptionList` in its revealed, disabled state,
         so a reviewed question looks exactly like the one that was sat.
-- [ ] **8. Review flow** — `review` overview + `take` + `results`, reusing the
-      runner via the `review:<testId>` source key.
+- [x] **8. Review flow** — `review` overview (`ReviewPanel`) + `review/take` +
+      `review/results`, reusing `ExamRunner` and `ResultsView` unchanged via the
+      `review:<testId>` source key. Only the pool-selection UI was new.
+      - **Review sittings are untimed** and default to **study** mode: the point
+        is deliberate practice, not exam pressure. Exam mode is still offered.
+      - Size options are 10 / 25 / All, hiding any that exceed the pool.
+      - "Clear review list" empties the pool for one test only, leaving practice
+        exam sessions and scores untouched.
+      - Verified in headless Chrome that the graduation rule holds end to end:
+        6 wrong → 6 pooled at streak 0; one all-correct pass → all at streak 1
+        with **nothing graduated**; a second pass with 5 correct and 1 wrong →
+        those 5 graduated out and the re-missed one **reset to streak 0**. The
+        overview badge tracked 6 → 1, and clearing the list preserved
+        `pe:dea-pe-01`.
 - [ ] **9. Polish** — resume badges per practice exam, reset progress, empty
       states, responsive nav grid (drawer on mobile).
       - Explanations are rendered as plain text, so Markdown backticks in the
@@ -130,7 +142,9 @@ Two selector traps cost time and will recur:
 - `getByRole("button", { name: "Next" })` also matches Next.js's **dev-tools
   button**. Use `{ exact: true }`.
 - `innerText` reflects CSS `text-transform`, so the question heading reads
-  `QUESTION 3 OF 6`. Compare case-insensitively.
+  `QUESTION 3 OF 6` while Playwright's own text matchers see the raw DOM text.
+  Use `textContent()` when parsing it, or compare case-insensitively. This one
+  bit twice.
 - A bare text match for `Correct` hits the answer-key marker inside `OptionList`
   before the feedback panel. Scope the locator to the panel.
 

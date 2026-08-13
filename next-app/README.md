@@ -36,6 +36,9 @@ next-app/
 │   │       ├── page.tsx             /[category]                tests
 │   │       └── [test]/
 │   │           ├── page.tsx         /[category]/[test]         practice exams
+│   │           ├── review/          …/review                   missed-question
+│   │           │                    …/review/take              drill + its
+│   │           │                    …/review/results           results
 │   │           └── [practiceExam]/
 │   │               ├── page.tsx     …/[practiceExam]           start / resume
 │   │               ├── take/        …/[practiceExam]/take      the runner
@@ -45,9 +48,10 @@ next-app/
 │   │   ├── layout/                  Page frame: PageContainer, Section
 │   │   ├── ui/                      Primitives: Badge, Button/ButtonLink,
 │   │   │                            Card/CardLink, Breadcrumbs, Dialog
-│   │   ├── exam/                    Sitting an exam: StartPanel, ExamRunner,
-│   │   │                            QuestionCard, OptionList, CodeBlock,
-│   │   │                            QuestionNavGrid, RunnerHeader, SubmitDialog
+│   │   ├── exam/                    Sitting an exam: StartPanel, ReviewPanel,
+│   │   │                            ExamRunner, QuestionCard, OptionList,
+│   │   │                            CodeBlock, QuestionNavGrid, RunnerHeader,
+│   │   │                            SubmitDialog
 │   │   └── results/                 ResultsView, ScoreSummary, DomainBreakdown,
 │   │                                AnswerReviewList
 │   │

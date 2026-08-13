@@ -259,6 +259,11 @@ Review sessions pull every pool entry for the test, sorted by `correctStreak`
 asc, then `timesMissed` desc, then `lastSeenAt` asc, capped at a user-chosen
 size (10 / 25 / all).
 
+**Review sittings are untimed and default to study mode.** The goal is deliberate
+practice rather than exam pressure; exam mode remains available. `ReviewPanel`
+also offers "Clear review list", which empties the pool for one test only and
+leaves practice-exam sessions and scores untouched.
+
 ### Hydration
 
 `localStorage` is client-only, so persisted state must not drive the first

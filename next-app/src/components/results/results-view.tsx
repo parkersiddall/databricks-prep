@@ -19,13 +19,15 @@ export function ResultsView({
   sourceKey,
   passingScorePct,
   startHref,
+  startLabel = "Retake",
   backHref,
   backLabel,
 }: {
   sourceKey: string;
   passingScorePct: number;
-  /** Start / resume screen, offering a retake. */
+  /** Start / resume screen, offering another sitting. */
   startHref: string;
+  startLabel?: string;
   backHref: string;
   backLabel: string;
 }) {
@@ -81,7 +83,7 @@ export function ResultsView({
 
       <div className="flex flex-wrap gap-2">
         <ButtonLink href={startHref} variant="primary">
-          Retake
+          {startLabel}
         </ButtonLink>
         <ButtonLink href={backHref}>{backLabel}</ButtonLink>
       </div>
