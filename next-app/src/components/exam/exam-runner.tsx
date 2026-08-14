@@ -97,7 +97,6 @@ export function ExamRunner({
         total={questions.length}
         remainingMs={remainingMs}
         studyMode={isStudyMode}
-        exitHref={startHref}
       />
 
       {/*
@@ -127,6 +126,17 @@ export function ExamRunner({
           >
             Submit exam
           </Button>
+          <ButtonLink
+            href={startHref}
+            variant="ghost"
+            size="sm"
+            className="mt-2 w-full"
+          >
+            Leave exam
+          </ButtonLink>
+          <p className="mt-2 text-center text-xs text-muted">
+            Progress saves automatically — resume anytime.
+          </p>
         </div>
       </details>
 
@@ -182,6 +192,17 @@ export function ExamRunner({
           >
             Submit exam
           </Button>
+          <ButtonLink
+            href={startHref}
+            variant="ghost"
+            size="sm"
+            className="mt-2 w-full"
+          >
+            Leave exam
+          </ButtonLink>
+          <p className="mt-2 text-center text-xs text-muted">
+            Progress saves automatically — resume anytime.
+          </p>
         </aside>
       </div>
 

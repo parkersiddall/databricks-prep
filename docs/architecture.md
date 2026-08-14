@@ -82,12 +82,15 @@ lives client-side.
 `ready` — because "still reading localStorage" needs a skeleton while "no session
 for this key" needs a prompt to start.
 
-**`RunnerHeader` carries the runner's only exit control**, an `exitHref` back to
-the sitting's start/resume screen. Since every mutation persists immediately
-(see below), leaving mid-attempt needs no confirmation dialog — the header just
-says so ("Progress saves automatically") next to the link. The results and
-missed-pool overview pages don't need one of their own: they already route
-through `PageContainer`, which renders breadcrumbs plus an explicit back button.
+**`ExamRunner`'s only exit control is a "Leave exam" button under each "Submit
+exam" button**, going back to the sitting's `startHref` (start/resume screen).
+Since every mutation persists immediately (see below), leaving mid-attempt
+needs no confirmation dialog — the button sits next to a note that progress
+saves automatically. It's duplicated once per breakpoint, same as "Submit
+exam", because the question-nav sidebar itself is duplicated between the
+mobile disclosure and the desktop `aside`. The results and missed-pool
+overview pages don't need one of their own: they already route through
+`PageContainer`, which renders breadcrumbs plus an explicit back button.
 
 **Trade-off:** because the runner resolves questions client-side through
 `content/queries`, the whole content registry is bundled into the client. Fine at
