@@ -97,6 +97,7 @@ export function ExamRunner({
         total={questions.length}
         remainingMs={remainingMs}
         studyMode={isStudyMode}
+        exitHref={startHref}
       />
 
       {/*

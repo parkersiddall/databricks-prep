@@ -82,6 +82,13 @@ lives client-side.
 `ready` — because "still reading localStorage" needs a skeleton while "no session
 for this key" needs a prompt to start.
 
+**`RunnerHeader` carries the runner's only exit control**, an `exitHref` back to
+the sitting's start/resume screen. Since every mutation persists immediately
+(see below), leaving mid-attempt needs no confirmation dialog — the header just
+says so ("Progress saves automatically") next to the link. The results and
+missed-pool overview pages don't need one of their own: they already route
+through `PageContainer`, which renders breadcrumbs plus an explicit back button.
+
 **Trade-off:** because the runner resolves questions client-side through
 `content/queries`, the whole content registry is bundled into the client. Fine at
 this size, and it is what makes the runner work offline with no API. If the

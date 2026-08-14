@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { ButtonLink } from "@/components/ui/button";
 import { formatDuration } from "@/lib/format";
 
 /** Warn when under two minutes remain. */
@@ -12,6 +13,7 @@ export function RunnerHeader({
   total,
   remainingMs,
   studyMode,
+  exitHref,
 }: {
   title: string;
   answeredCount: number;
@@ -19,6 +21,8 @@ export function RunnerHeader({
   /** Null when the sitting is untimed. */
   remainingMs: number | null;
   studyMode: boolean;
+  /** Start / resume screen for this sitting, e.g. after exiting mid-attempt. */
+  exitHref: string;
 }) {
   const low = remainingMs !== null && remainingMs <= LOW_TIME_MS;
 
@@ -64,6 +68,15 @@ export function RunnerHeader({
             width: `${total === 0 ? 0 : (answeredCount / total) * 100}%`,
           }}
         />
+      </div>
+
+      <div className="mt-3 flex items-center justify-between gap-3 border-t border-border pt-3">
+        <p className="text-xs text-muted">
+          Progress saves automatically — resume anytime.
+        </p>
+        <ButtonLink href={exitHref} variant="ghost" size="sm">
+          Exit
+        </ButtonLink>
       </div>
     </header>
   );
