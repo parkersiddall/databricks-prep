@@ -11,6 +11,7 @@ import { CardLink } from "@/components/ui/card";
 import {
   getCategoryBySlug,
   getPracticeExamsForTest,
+  getQuestionsForTest,
   getTestBySlug,
   getTimeLimitMinutes,
   listTestParams,
@@ -40,6 +41,7 @@ export default async function TestPage({
   if (foundCategory === undefined || test === undefined) notFound();
 
   const practiceExams = getPracticeExamsForTest(test.id);
+  const questionCount = getQuestionsForTest(test.id).length;
   const basePath = `/${foundCategory.slug}/${test.slug}`;
 
   return (
@@ -58,6 +60,29 @@ export default async function TestPage({
             <Badge key={domain}>{domain}</Badge>
           ))}
         </div>
+      </Section>
+
+      {/*
+        Above the practice-exam list on purpose: drilling questions is the
+        everyday use, and sitting a full timed simulation is the occasional one.
+      */}
+      <Section heading="Practise">
+        <CardLink
+          href={`${basePath}/all-questions`}
+          title="Practice all questions"
+          description="Work through every question in this certification at your own pace, in a random order, with the answer revealed as you go."
+          meta={joinMeta(
+            pluralize(questionCount, "question"),
+            "untimed",
+            "not saved between visits",
+          )}
+        />
+        <CardLink
+          href={`${basePath}/review`}
+          title="Missed questions"
+          description="Drill only the questions you have got wrong recently, across every practice exam in this certification."
+          aside={<MissedCount testId={test.id} />}
+        />
       </Section>
 
       <Section heading="Practice exams">
@@ -84,15 +109,6 @@ export default async function TestPage({
             );
           })
         )}
-      </Section>
-
-      <Section heading="Review">
-        <CardLink
-          href={`${basePath}/review`}
-          title="Missed questions"
-          description="Drill only the questions you have got wrong recently, across every practice exam in this certification."
-          aside={<MissedCount testId={test.id} />}
-        />
       </Section>
     </PageContainer>
   );
