@@ -55,7 +55,25 @@
       "Bash(git fetch *)",
       "Bash(git rev-list *)",
       "Bash(awk '{print \"behind: \"$1\", ahead: \"$2}')",
-      "Bash(gh pr *)"
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "Bash(git switch *)",
+      "Bash(ls /private/tmp/claude-501/-Users-parker-Projects-databricks-prep/971471e0-9eeb-4a56-a5e2-85c8e5b668ae/scratchpad 2>/dev/null; ls ~/.pw-scratch 2>/dev/null; echo \"---\"; which node; node -v)",
+      "Read(//Users/parker/**)",
+      "Bash(mkdir -p /private/tmp/claude-501/-Users-parker-Projects-databricks-prep/971471e0-9eeb-4a56-a5e2-85c8e5b668ae/scratchpad/pw)",
+      "Bash(npm init *)",
+      "Bash(echo \"installed: $?\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/databricks/data-engineer-associate/all-questions)",
+      "Bash(node check.mjs)",
+      "Bash(node -e ' *)",
+      "Bash(node review-check.mjs)",
+      "Bash(node -e \"const t=require\\('./src/content/databricks/data-engineer-associate/test.json'\\); console.log\\('test id:', t.id\\)\")",
+      "Bash(curl -s -o /dev/null -w \"dev server: %{http_code}\\\\n\" --max-time 3 http://localhost:3000)",
+      "Edit(/.claude/skills/issue/**)",
+      "Bash(grep -n \"type>/<number>-<slug>\\\\|<issue-number>\" .claude/skills/issue/SKILL.md CLAUDE.md docs/decisions.md; echo \"=== label table ===\"; sed -n '/^| Label/,/^| anything else/p' .claude/skills/issue/SKILL.md)"
+    ],
+    "additionalDirectories": [
+      "/Users/parker/Projects/databricks-prep/.claude/skills/issue"
     ]
   }
 }

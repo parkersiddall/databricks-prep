@@ -54,8 +54,9 @@ trustworthy.
 
 Isolated tasks — features, changes, bugs — live as GitHub issues in this repo.
 [`/issue`](.claude/skills/issue/SKILL.md) works one end to end: select or look up
-the issue, branch from `origin/main`, plan it, commit each plan item separately,
-then open a PR that closes it.
+the issue, branch from `origin/main` as `<type>/<number>-<slug>`, plan it, commit
+each plan item separately, then open a PR that closes it. The skill owns the
+branch-naming rules — derive the name from the issue rather than inventing one.
 
 ```
 /issue          # pick the next suitable open issue

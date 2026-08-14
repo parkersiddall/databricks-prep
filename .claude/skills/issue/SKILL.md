@@ -65,9 +65,49 @@ git switch -c <type>/<number>-<slug> origin/main
 Always branch from a freshly fetched `origin/main`. Never commit to `main` or
 `dev` directly.
 
-`<type>` comes from the issue's labels — `bug` → `fix`, `documentation` → `docs`,
-`enhancement` → `feat`, anything else → `chore`. `<slug>` is a few kebab-case
-words from the title, e.g. `fix/42-timer-resets-on-refresh`.
+### Branch name
+
+The format is fixed: **`<type>/<number>-<slug>`**. Derive it, do not invent one —
+the same issue must always produce the same branch name.
+
+**`<type>`** comes from the issue's labels:
+
+| Label            | Type    |
+| ---------------- | ------- |
+| `bug`            | `fix`   |
+| `enhancement`    | `feat`  |
+| `documentation`  | `docs`  |
+| anything else, or no labels | `chore` |
+
+If an issue carries several of these, take the **first match reading down that
+table** — `bug` wins over `enhancement`, which wins over `documentation`. A bug
+fix that also improves docs is still a `fix`.
+
+**`<number>`** is the bare issue number, no `#`.
+
+**`<slug>`** is derived from the issue title:
+
+1. Lowercase it.
+2. Drop anything that is not a letter, digit, or space — including `'`, `"`,
+   `/`, `:`, and emoji.
+3. Collapse whitespace to single hyphens.
+4. Drop leading filler that adds nothing: `the`, `a`, `an`, and a leading verb
+   already implied by the type (`fix`, `add`, `update` on a `fix`/`feat` branch).
+5. Keep the first **5 words or 40 characters**, whichever comes first, and never
+   end on a hyphen.
+
+Examples:
+
+| Issue                                              | Branch                              |
+| -------------------------------------------------- | ----------------------------------- |
+| #42 `bug` — "Timer resets on refresh"               | `fix/42-timer-resets-on-refresh`    |
+| #7 `enhancement` — "Add an export/import button"    | `feat/7-export-import-button`       |
+| #13 `documentation` — "README: clarify Docker ports"| `docs/13-readme-clarify-docker-ports` |
+| #58 no labels — "Bump Next.js to 16.4"              | `chore/58-bump-nextjs-to-164`       |
+
+If that branch name already exists locally or on the remote, **do not invent a
+variant** — the issue is already being worked. Check it out and continue, or stop
+and ask.
 
 ## 4. Plan
 
