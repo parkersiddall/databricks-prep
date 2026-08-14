@@ -134,9 +134,6 @@ export function ExamRunner({
           >
             Leave exam
           </ButtonLink>
-          <p className="mt-2 text-center text-xs text-muted">
-            Progress saves automatically — resume anytime.
-          </p>
         </div>
       </details>
 
@@ -200,9 +197,6 @@ export function ExamRunner({
           >
             Leave exam
           </ButtonLink>
-          <p className="mt-2 text-center text-xs text-muted">
-            Progress saves automatically — resume anytime.
-          </p>
         </aside>
       </div>
 
