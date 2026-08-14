@@ -37,6 +37,9 @@ next-app/
 │   │       ├── page.tsx             /[category]                tests
 │   │       └── [test]/
 │   │           ├── page.tsx         /[category]/[test]         practice exams
+│   │           ├── all-questions/   …/all-questions            whole-bank
+│   │           │                    …/all-questions/take       practice + its
+│   │           │                    …/all-questions/results    results
 │   │           ├── review/          …/review                   missed-question
 │   │           │                    …/review/take              drill + its
 │   │           │                    …/review/results           results
@@ -52,9 +55,9 @@ next-app/
 │   │   │                            RichText (inline-code prose)
 │   │   ├── settings/                SettingsPanel, ThemeSync + themeScript
 │   │   ├── exam/                    Sitting an exam: StartPanel, ReviewPanel,
-│   │   │                            ExamRunner, QuestionCard, OptionList,
-│   │   │                            CodeBlock, QuestionNavGrid, RunnerHeader,
-│   │   │                            SubmitDialog
+│   │   │                            AllQuestionsPanel, ExamRunner, QuestionCard,
+│   │   │                            OptionList, CodeBlock, QuestionNavGrid,
+│   │   │                            RunnerHeader, SubmitDialog
 │   │   └── results/                 ResultsView, ScoreSummary, DomainBreakdown,
 │   │                                AnswerReviewList
 │   │
@@ -69,6 +72,7 @@ next-app/
 │   │   ├── grading.ts               Graders per question type, scoreAttempt
 │   │   ├── missed-pool.ts           Missed-question pool reducer + ordering
 │   │   ├── session.ts               Session type and its operations
+│   │   ├── shuffle.ts               Fisher-Yates, RNG injected for tests
 │   │   ├── timer.ts                 Accumulate-on-pause countdown math
 │   │   └── format.ts                Display helpers (durations, percentages)
 │   │

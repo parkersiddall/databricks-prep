@@ -50,13 +50,16 @@ state is resolved client-side by a **source key**; no session IDs in URLs.
 ```
 /                                            Test categories
 /[category]                                  Tests in the category
-/[category]/[test]                           Practice exams + "Missed Questions" card
+/[category]/[test]                           Practice + review cards, then practice exams
 /[category]/[test]/[practiceExam]            Start / resume screen
-/[category]/[test]/[practiceExam]/take       Runner        — source key `pe:<practiceExamId>`
+/[category]/[test]/[practiceExam]/take       Runner          — source key `pe:<practiceExamId>`
 /[category]/[test]/[practiceExam]/results    Attempt review
 /[category]/[test]/review                    Missed-pool overview
-/[category]/[test]/review/take               Review runner — source key `review:<testId>`
+/[category]/[test]/review/take               Review runner   — source key `review:<testId>`
 /[category]/[test]/review/results            Review results
+/[category]/[test]/all-questions             Whole-bank practice overview
+/[category]/[test]/all-questions/take        Practice runner — source key `all:<testId>`
+/[category]/[test]/all-questions/results     Practice results
 ```
 
 Concretely: `/databricks/data-engineer-associate/practice-exam-1/take`.
@@ -64,12 +67,15 @@ Concretely: `/databricks/data-engineer-associate/practice-exam-1/take`.
 `generateStaticParams` on each dynamic segment enumerates the registry. Runner
 and results pages are `"use client"`.
 
-**The missed-question review sits at the test level, not the practice-exam
-level** — the pool spans every practice exam under that certification, which is
-the entire point of it.
+**The missed-question review and the all-questions practice both sit at the test
+level, not the practice-exam level** — the missed pool spans every practice exam
+under that certification, which is the entire point of it, and all-questions
+practice draws from the same span.
 
 **Key decision:** one generic runner component driven by a source key, so a
-practice exam and a review session share a single code path.
+practice exam, a review session and an all-questions run share a single code
+path. The three differ only in how the question list is built and whether the
+session is persisted, not in how it is sat.
 
 ### Server shell, client runner
 

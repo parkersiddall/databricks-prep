@@ -10,10 +10,11 @@ import { elapsedAt } from "@/lib/timer";
 import { selectSession, useSessionsStore } from "@/stores/sessions";
 
 /**
- * Results for a submitted sitting, read from the persisted session.
+ * Results for a submitted sitting, read from the stored session.
  *
- * Generic over the source key, so this serves both practice exams and
- * missed-question review sessions.
+ * Generic over the source key, so this serves practice exams, missed-question
+ * reviews and all-questions practice alike. The last of those is not persisted,
+ * so a reload lands on the "no results yet" branch.
  */
 export function ResultsView({
   sourceKey,
