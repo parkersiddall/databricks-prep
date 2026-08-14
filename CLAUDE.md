@@ -50,6 +50,22 @@ Do not duplicate a fact across files — state it in the file that owns it and l
 from the others. Two copies of the same fact drift, and then neither is
 trustworthy.
 
+## Working from issues
+
+Isolated tasks — features, changes, bugs — live as GitHub issues in this repo.
+[`/issue`](.claude/skills/issue/SKILL.md) works one end to end: select or look up
+the issue, branch from `origin/main`, plan it, commit each plan item separately,
+then open a PR that closes it.
+
+```
+/issue          # pick the next suitable open issue
+/issue 42       # by number
+/issue timer resets on refresh   # by title
+```
+
+That skill is the only context in which you commit without being asked, and it
+still never merges, force-pushes, or closes an issue by hand.
+
 ## Opening a pull request
 
 Use [`.github/pull_request_template.md`](.github/pull_request_template.md):
@@ -142,9 +158,10 @@ ambiguous between the middle and leaf level.
   `next-app/src/app/globals.css` (`bg-surface`, `text-muted`, `border-border`,
   `text-danger`, …) rather than raw palette values, so the theme stays swappable.
   Light, system-dark, and explicit `[data-theme="dark"]` are all wired.
-- **Commit cadence:** the user reviews and commits one unit of work at a time.
-  Finish a piece, report what changed and what was verified, then stop rather than
-  chaining several together.
+- **Commit cadence:** by default the user reviews and commits one unit of work at
+  a time. Finish a piece, report what changed and what was verified, then stop
+  rather than chaining several together. **The `/issue` skill is the exception** —
+  it commits each plan item itself.
 
 ## Gotchas discovered the hard way
 
