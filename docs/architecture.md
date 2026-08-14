@@ -161,6 +161,7 @@ const QuestionBase = z.object({
   prompt: z.string(),
   code: z.object({ language: z.string(), source: z.string() }).optional(),
   explanation: z.string().optional(),
+  documentationUrl: z.string().url().optional(), // source link shown under feedback
   domain: z.string().optional(),  // exam objective; powers the results breakdown
 });
 
@@ -339,6 +340,16 @@ around identifiers. `parseInlineCode` splits those spans out and `<RichText>`
 renders them as `<code>`. **This is the entire extent of Markdown support** —
 deliberately, rather than shipping a parser for a few identifiers. An unmatched
 backtick stays literal instead of swallowing the rest of the string.
+
+### Documentation links
+
+A question's optional `documentationUrl` renders as a subtle text link
+underneath the feedback panel, wherever that panel appears: `QuestionCard`'s
+revealed state in study mode, and `AnswerReviewList`'s per-question block in
+the results review. It opens in a new tab (`target="_blank" rel="noopener
+noreferrer"`) since it points off-site to Databricks docs. Kept deliberately
+unstyled beyond the app's existing muted-text convention — it is a
+verification aid, not a call to action.
 
 ## Grading
 
