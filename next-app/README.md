@@ -37,6 +37,9 @@ next-app/
 │   │       ├── page.tsx             /[category]                tests
 │   │       └── [test]/
 │   │           ├── page.tsx         /[category]/[test]         practice exams
+│   │           ├── all-questions/   …/all-questions            whole-bank
+│   │           │                    …/all-questions/take       practice + its
+│   │           │                    …/all-questions/results    results
 │   │           ├── review/          …/review                   missed-question
 │   │           │                    …/review/take              drill + its
 │   │           │                    …/review/results           results
@@ -52,9 +55,9 @@ next-app/
 │   │   │                            RichText (inline-code prose)
 │   │   ├── settings/                SettingsPanel, ThemeSync + themeScript
 │   │   ├── exam/                    Sitting an exam: StartPanel, ReviewPanel,
-│   │   │                            ExamRunner, QuestionCard, OptionList,
-│   │   │                            CodeBlock, QuestionNavGrid, RunnerHeader,
-│   │   │                            SubmitDialog
+│   │   │                            AllQuestionsPanel, ExamRunner, QuestionCard,
+│   │   │                            OptionList, CodeBlock, QuestionNavGrid,
+│   │   │                            RunnerHeader, SubmitDialog
 │   │   └── results/                 ResultsView, ScoreSummary, DomainBreakdown,
 │   │                                AnswerReviewList
 │   │
@@ -69,6 +72,7 @@ next-app/
 │   │   ├── grading.ts               Graders per question type, scoreAttempt
 │   │   ├── missed-pool.ts           Missed-question pool reducer + ordering
 │   │   ├── session.ts               Session type and its operations
+│   │   ├── shuffle.ts               Fisher-Yates, RNG injected for tests
 │   │   ├── timer.ts                 Accumulate-on-pause countdown math
 │   │   └── format.ts                Display helpers (durations, percentages)
 │   │
@@ -142,6 +146,11 @@ browser. All have been exercised in headless Chrome except the two marked
   90 minutes, so nothing has watched one lapse.
 - Study mode: feedback appears per answer and grading still reaches the pool.
 - No hydration warnings in the console on any page.
+- Practice all questions: the run covers the whole bank, a second run comes back
+  in a different order, and a reload drops the sitting rather than resuming it —
+  `dbp:sessions:v1` never gains an `all:` key.
+- Miss questions in an all-questions run → they appear on the test-level review
+  page and in the card's badge, exactly as misses from a practice exam do.
 
 ### Driving it in a browser
 
@@ -164,6 +173,13 @@ Three selector traps cost time and will recur:
 - A bare text match for `Correct` hits the answer-key marker inside `OptionList`
   before the feedback panel. Scope the locator to the panel, or to
   `span.rounded-full` for a Badge.
+- **Every seeded question has option `a` as its key**, so "click the first
+  option" answers *correctly* every time and the missed pool stays empty. Check
+  the **last** option when you need a wrong answer. (Worth fixing in the content
+  eventually — a user who always guesses A currently scores 100%.)
+- `isDisabled()` reports `false` on a `<fieldset disabled>`, since it only
+  understands native form controls. Assert on
+  `getAttribute("disabled") !== null` instead.
 
 If this becomes routine, `/run-skill-generator` would capture it as a project
 skill.

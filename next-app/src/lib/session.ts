@@ -21,7 +21,10 @@ export type SessionStatus = "in-progress" | "submitted";
 
 export type Session = {
   id: string;
-  /** `pe:<practiceExamId>` or `review:<testId>`. Identifies the session slot. */
+  /**
+   * `pe:<practiceExamId>`, `review:<testId>` or `all:<testId>`. Identifies the
+   * session slot.
+   */
   sourceKey: string;
   testId: string;
   /**
@@ -46,6 +49,22 @@ export function practiceExamSourceKey(practiceExamId: string): string {
 
 export function reviewSourceKey(testId: string): string {
   return `review:${testId}`;
+}
+
+/**
+ * Marks the "practice all questions" slot. Sessions under this prefix are
+ * deliberately **not persisted** — see stores/sessions.ts — so the prefix is
+ * exported for the store to filter on.
+ */
+export const ALL_QUESTIONS_PREFIX = "all:";
+
+export function allQuestionsSourceKey(testId: string): string {
+  return `${ALL_QUESTIONS_PREFIX}${testId}`;
+}
+
+/** True for the ephemeral all-questions slots, whatever test they belong to. */
+export function isAllQuestionsSourceKey(sourceKey: string): boolean {
+  return sourceKey.startsWith(ALL_QUESTIONS_PREFIX);
 }
 
 export function createSession({

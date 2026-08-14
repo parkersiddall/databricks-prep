@@ -136,6 +136,68 @@ describe("sessions store", () => {
     expect(sessions["pe:pe-02"]).toBeDefined();
   });
 
+  it("keeps an all-questions sitting out of storage", async () => {
+    const { useSessionsStore, SESSIONS_STORAGE_KEY } = await import(
+      "@/stores/sessions"
+    );
+
+    useSessionsStore.getState().start({
+      sourceKey: "pe:pe-01",
+      testId: "dea",
+      questionIds: ["q1"],
+      mode: "exam",
+      timeLimitMs: null,
+      now: 0,
+    });
+    useSessionsStore.getState().start({
+      sourceKey: "all:dea",
+      testId: "dea",
+      questionIds: ["q1", "q2"],
+      mode: "study",
+      timeLimitMs: null,
+      now: 0,
+    });
+    useSessionsStore.getState().answer("all:dea", "q1", answer);
+
+    // Live in memory for the current visit...
+    expect(useSessionsStore.getState().sessions["all:dea"].answers.q1).toEqual(
+      answer,
+    );
+
+    // ...but never written, so the persisted map holds only the practice exam.
+    const persisted = JSON.parse(storage.getItem(SESSIONS_STORAGE_KEY)!).state
+      .sessions;
+    expect(Object.keys(persisted)).toEqual(["pe:pe-01"]);
+  });
+
+  it("drops an all-questions sitting on reload, keeping the others", async () => {
+    const first = await import("@/stores/sessions");
+
+    first.useSessionsStore.getState().start({
+      sourceKey: "pe:pe-01",
+      testId: "dea",
+      questionIds: ["q1"],
+      mode: "exam",
+      timeLimitMs: null,
+      now: 0,
+    });
+    first.useSessionsStore.getState().start({
+      sourceKey: "all:dea",
+      testId: "dea",
+      questionIds: ["q1", "q2"],
+      mode: "study",
+      timeLimitMs: null,
+      now: 0,
+    });
+
+    vi.resetModules();
+    const second = await import("@/stores/sessions");
+    const { sessions } = second.useSessionsStore.getState();
+
+    expect(sessions["all:dea"]).toBeUndefined();
+    expect(sessions["pe:pe-01"]).toBeDefined();
+  });
+
   it("ignores actions for a source key with no session", async () => {
     const { useSessionsStore } = await import("@/stores/sessions");
 

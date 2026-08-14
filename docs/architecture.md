@@ -50,13 +50,16 @@ state is resolved client-side by a **source key**; no session IDs in URLs.
 ```
 /                                            Test categories
 /[category]                                  Tests in the category
-/[category]/[test]                           Practice exams + "Missed Questions" card
+/[category]/[test]                           Practice + review cards, then practice exams
 /[category]/[test]/[practiceExam]            Start / resume screen
-/[category]/[test]/[practiceExam]/take       Runner        — source key `pe:<practiceExamId>`
+/[category]/[test]/[practiceExam]/take       Runner          — source key `pe:<practiceExamId>`
 /[category]/[test]/[practiceExam]/results    Attempt review
 /[category]/[test]/review                    Missed-pool overview
-/[category]/[test]/review/take               Review runner — source key `review:<testId>`
+/[category]/[test]/review/take               Review runner   — source key `review:<testId>`
 /[category]/[test]/review/results            Review results
+/[category]/[test]/all-questions             Whole-bank practice overview
+/[category]/[test]/all-questions/take        Practice runner — source key `all:<testId>`
+/[category]/[test]/all-questions/results     Practice results
 ```
 
 Concretely: `/databricks/data-engineer-associate/practice-exam-1/take`.
@@ -64,12 +67,15 @@ Concretely: `/databricks/data-engineer-associate/practice-exam-1/take`.
 `generateStaticParams` on each dynamic segment enumerates the registry. Runner
 and results pages are `"use client"`.
 
-**The missed-question review sits at the test level, not the practice-exam
-level** — the pool spans every practice exam under that certification, which is
-the entire point of it.
+**The missed-question review and the all-questions practice both sit at the test
+level, not the practice-exam level** — the missed pool spans every practice exam
+under that certification, which is the entire point of it, and all-questions
+practice draws from the same span.
 
 **Key decision:** one generic runner component driven by a source key, so a
-practice exam and a review session share a single code path.
+practice exam, a review session and an all-questions run share a single code
+path. The three differ only in how the question list is built and whether the
+session is persisted, not in how it is sat.
 
 ### Server shell, client runner
 
@@ -192,7 +198,7 @@ does not destroy the others.
 ```ts
 type Session = {
   id: string;
-  sourceKey: string;              // "pe:<practiceExamId>" | "review:<testId>"
+  sourceKey: string;              // "pe:<practiceExamId>" | "review:<testId>" | "all:<testId>"
   testId: string;
   questionIds: string[];          // frozen at start
   answers: Record<string, AnswerValue>;
@@ -241,6 +247,24 @@ Three details make "finish it later" actually work:
    clamped at zero so a backwards system clock cannot refund spent time.
 3. **Every mutation persists immediately.** No save button; a hard refresh
    mid-question loses nothing.
+
+#### All-questions sittings are the one exception: they are not persisted
+
+Sessions under the `all:` prefix live in memory only. The sessions store's
+`partialize` filters them out, so they never reach `localStorage` rather than
+being written and then ignored on read.
+
+They are a drill through the whole bank, not saved progress, and each one is
+**freshly shuffled** — resuming a stale order is the opposite of the point.
+Closing or reloading the tab therefore starts a new, reshuffled sitting.
+Everything the user actually earns from one still survives, because study-mode
+grading feeds the missed pool as each answer lands and that store *is*
+persisted.
+
+The consequence to know: a hard refresh on `…/all-questions/take` or
+`…/all-questions/results` lands on the runner's "missing" state, which offers a
+link back to the start screen. `lib/session.ts` exports `ALL_QUESTIONS_PREFIX`
+and `isAllQuestionsSourceKey` so the rule has exactly one definition.
 
 ### Missed-question pool
 

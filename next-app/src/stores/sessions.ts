@@ -6,6 +6,7 @@ import {
   createSession,
   flushTimer,
   goToIndex,
+  isAllQuestionsSourceKey,
   pauseTimer,
   resumeTimer,
   setAnswer,
@@ -17,11 +18,17 @@ import {
 
 /**
  * In-progress and completed sittings, keyed by source key
- * (`pe:<practiceExamId>` or `review:<testId>`).
+ * (`pe:<practiceExamId>`, `review:<testId>` or `all:<testId>`).
  *
  * Keying this way gives every practice exam its own independent slot, so one can
  * sit half-finished while another is untouched. All the real logic lives in
  * lib/session.ts; this store only holds the map and persists it.
+ *
+ * **All-questions sittings are the exception: they live in memory only.** They
+ * are a browse-the-bank drill rather than saved progress, and each one is freshly
+ * reshuffled, so resuming a stale order is not what the user wants. Anything they
+ * actually earn — pool entries for questions they miss — is persisted by the
+ * missed store instead.
  */
 
 type SessionsState = {
@@ -127,8 +134,16 @@ export const useSessionsStore = create<SessionsState & SessionsActions>()(
     {
       name: SESSIONS_STORAGE_KEY,
       version: 1,
-      // Persist state only; actions are recreated on every load.
-      partialize: (state) => ({ sessions: state.sessions }),
+      // Persist state only; actions are recreated on every load. All-questions
+      // sittings are dropped here rather than on read, so they never reach
+      // storage in the first place.
+      partialize: (state) => ({
+        sessions: Object.fromEntries(
+          Object.entries(state.sessions).filter(
+            ([sourceKey]) => !isAllQuestionsSourceKey(sourceKey),
+          ),
+        ),
+      }),
     },
   ),
 );
