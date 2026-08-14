@@ -32,6 +32,24 @@ describe("QuestionSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts an optional documentationUrl", () => {
+    const result = QuestionSchema.safeParse({
+      ...validQuestion,
+      documentationUrl: "https://docs.databricks.com/delta/index.html",
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a documentationUrl that is not a valid URL", () => {
+    const result = QuestionSchema.safeParse({
+      ...validQuestion,
+      documentationUrl: "not-a-url",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
   // The two checks below are the answer-key guards. Without them a content typo
   // silently marks every attempt at the question wrong.
   it("rejects a correctOptionId that is not one of the options", () => {

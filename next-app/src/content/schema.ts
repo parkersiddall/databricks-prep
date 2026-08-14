@@ -37,6 +37,8 @@ const questionBaseFields = {
   prompt: z.string().min(1),
   code: CodeSnippetSchema.optional(),
   explanation: z.string().optional(),
+  /** Link to Databricks documentation backing the correct answer. */
+  documentationUrl: z.string().url().optional(),
   /** Exam objective. Must appear in the owning test's `domains`. */
   domain: z.string().min(1).optional(),
 };
