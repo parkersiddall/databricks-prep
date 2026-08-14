@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import type { AttemptResult } from "@/lib/grading";
 import {
+  allQuestionsSourceKey,
   answeredCount,
   createSession,
   flushTimer,
   goToIndex,
+  isAllQuestionsSourceKey,
   isFlagged,
   pauseTimer,
   practiceExamSourceKey,
@@ -46,9 +48,16 @@ const emptyResult: AttemptResult = {
 };
 
 describe("source keys", () => {
-  it("namespaces practice exams and reviews separately", () => {
+  it("namespaces practice exams, reviews and all-questions separately", () => {
     expect(practiceExamSourceKey("pe-01")).toBe("pe:pe-01");
     expect(reviewSourceKey("dea")).toBe("review:dea");
+    expect(allQuestionsSourceKey("dea")).toBe("all:dea");
+  });
+
+  it("recognises only the all-questions prefix as ephemeral", () => {
+    expect(isAllQuestionsSourceKey(allQuestionsSourceKey("dea"))).toBe(true);
+    expect(isAllQuestionsSourceKey(reviewSourceKey("dea"))).toBe(false);
+    expect(isAllQuestionsSourceKey(practiceExamSourceKey("pe-01"))).toBe(false);
   });
 });
 
