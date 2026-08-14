@@ -126,6 +126,14 @@ export function ExamRunner({
           >
             Submit exam
           </Button>
+          <ButtonLink
+            href={startHref}
+            variant="ghost"
+            size="sm"
+            className="mt-2 w-full"
+          >
+            Leave exam
+          </ButtonLink>
         </div>
       </details>
 
@@ -181,6 +189,14 @@ export function ExamRunner({
           >
             Submit exam
           </Button>
+          <ButtonLink
+            href={startHref}
+            variant="ghost"
+            size="sm"
+            className="mt-2 w-full"
+          >
+            Leave exam
+          </ButtonLink>
         </aside>
       </div>
 
