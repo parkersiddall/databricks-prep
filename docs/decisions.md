@@ -108,6 +108,13 @@ not commit on the user's behalf unless asked.
 **Why:** a large multi-step change is hard to review and collapses into one
 oversized commit.
 
+**The exception is the `/issue` skill**
+([`../.claude/skills/issue/SKILL.md`](../.claude/skills/issue/SKILL.md)), which
+carries commit authority so an issue can run start to finish unattended. The
+same principle still holds inside it — one plan item is one commit — so the
+result is a reviewable series rather than a single lump. Invoking the skill *is*
+the authorisation; nothing else grants it.
+
 The initial build was tracked in a `docs/build-plan.md` checklist, which was
 deleted once every step landed. Its still-live content — the verification
 checklist and the browser-driving recipe — moved into
@@ -136,6 +143,27 @@ prompts stay available to the author without appearing in the published PR.
 is no `--template` flag, and `--body` / `--body-file` bypasses it — GitHub only
 prefills it in the web UI, and `gh` only in an interactive prompt. Anything
 scripted or agent-driven must read the template and fill it in by hand.
+
+---
+
+## Issue work follows a fixed flow
+
+Isolated tasks live as GitHub issues, and
+[`../.claude/skills/issue/SKILL.md`](../.claude/skills/issue/SKILL.md) defines how
+one is worked: select or look up → read body **and comments** → branch from a
+freshly fetched `origin/main` as `<type>/<number>-<slug>` → plan with one commit
+per item → PR that `Closes` the issue.
+
+Two rules exist to keep the result reviewable rather than a single lump:
+
+- **One plan item, one commit**, each landing on a green `test` / `typecheck` /
+  `lint`, with docs updated in the same commit as the change that staled them.
+- **`Refs #n` on commits, `Closes #n` only in the PR**, so the issue closes on
+  merge rather than on the first commit.
+
+**Rejected: a slash command or a plain prose section in `CLAUDE.md`.** A skill is
+discoverable via `/issue`, can be invoked with or without an issue reference, and
+keeps a long procedure out of the always-loaded context.
 
 ---
 
