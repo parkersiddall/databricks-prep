@@ -88,6 +88,16 @@ export function QuestionCard({
               <RichText text={question.explanation} />
             </p>
           )}
+          {question.documentationUrl !== undefined && (
+            <a
+              href={question.documentationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block text-xs text-muted underline underline-offset-2 hover:text-foreground"
+            >
+              Verify in Databricks documentation
+            </a>
+          )}
         </div>
       )}
     </article>
