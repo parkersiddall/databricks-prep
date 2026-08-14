@@ -16,7 +16,8 @@
         { "id": "d", "text": "_metadata" }
       ],
       "correctOptionId": "a",
-      "explanation": "Delta Lake records every atomic commit as a JSON file under `_delta_log`, alongside periodic Parquet checkpoint files. That log is what provides ACID guarantees, time travel, and schema enforcement."
+      "explanation": "Delta Lake records every atomic commit as a JSON file under `_delta_log`, alongside periodic Parquet checkpoint files. That log is what provides ACID guarantees, time travel, and schema enforcement.",
+      "documentationUrl": "https://docs.databricks.com/en/delta/transaction-log.html"
     },
     {
       "id": "dea-pe1-002",

@@ -44,7 +44,8 @@
         { "id": "d", "text": "The record is routed automatically to a quarantine table" }
       ],
       "correctOptionId": "a",
-      "explanation": "`ON VIOLATION DROP ROW` drops failing records while still reporting them in the event log metrics. `FAIL UPDATE` is the variant that halts the pipeline; with no `ON VIOLATION` clause the record is retained and only reported."
+      "explanation": "`ON VIOLATION DROP ROW` drops failing records while still reporting them in the event log metrics. `FAIL UPDATE` is the variant that halts the pipeline; with no `ON VIOLATION` clause the record is retained and only reported.",
+      "documentationUrl": "https://docs.databricks.com/en/delta-live-tables/expectations.html"
     },
     {
       "id": "dea-pe2-003",
