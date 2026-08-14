@@ -146,6 +146,11 @@ browser. All have been exercised in headless Chrome except the two marked
   90 minutes, so nothing has watched one lapse.
 - Study mode: feedback appears per answer and grading still reaches the pool.
 - No hydration warnings in the console on any page.
+- Practice all questions: the run covers the whole bank, a second run comes back
+  in a different order, and a reload drops the sitting rather than resuming it —
+  `dbp:sessions:v1` never gains an `all:` key.
+- Miss questions in an all-questions run → they appear on the test-level review
+  page and in the card's badge, exactly as misses from a practice exam do.
 
 ### Driving it in a browser
 
@@ -168,6 +173,13 @@ Three selector traps cost time and will recur:
 - A bare text match for `Correct` hits the answer-key marker inside `OptionList`
   before the feedback panel. Scope the locator to the panel, or to
   `span.rounded-full` for a Badge.
+- **Every seeded question has option `a` as its key**, so "click the first
+  option" answers *correctly* every time and the missed pool stays empty. Check
+  the **last** option when you need a wrong answer. (Worth fixing in the content
+  eventually — a user who always guesses A currently scores 100%.)
+- `isDisabled()` reports `false` on a `<fieldset disabled>`, since it only
+  understands native form controls. Assert on
+  `getAttribute("disabled") !== null` instead.
 
 If this becomes routine, `/run-skill-generator` would capture it as a project
 skill.
