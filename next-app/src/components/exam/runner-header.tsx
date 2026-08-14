@@ -74,8 +74,8 @@ export function RunnerHeader({
         <p className="text-xs text-muted">
           Progress saves automatically — resume anytime.
         </p>
-        <ButtonLink href={exitHref} variant="ghost" size="sm">
-          Exit
+        <ButtonLink href={exitHref} variant="secondary" size="sm">
+          Leave exam
         </ButtonLink>
       </div>
     </header>
